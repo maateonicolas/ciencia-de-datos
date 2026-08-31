@@ -1,1 +1,1 @@
-# ciencias-de-datos
+# ciencia-de-datos
