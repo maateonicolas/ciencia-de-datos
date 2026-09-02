@@ -1,7 +1,6 @@
 services:
   data-warehouse:
     image: postgres:17
-
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
@@ -9,6 +8,19 @@ services:
     ports:
       - 5432:5432
     volumes:
-      -
-  pruebadeimagen:
+      - warehouse-data:/var/lib/postgresql/data
+  warehouse-ui:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=mndiaz@gmail.com
+      - PGADMIN_DEFAULT_PASSWORD=123
+    ports:
+      - 8080:80
+    depends_on:
+      - data-warehouse
+    volumes:
+      - warehouse-ui-data:/var/lib/pgadmin
+volumes:
+  warehouse-data:
+  warehouse-ui-data:
   
