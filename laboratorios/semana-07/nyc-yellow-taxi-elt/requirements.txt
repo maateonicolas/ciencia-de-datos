@@ -1,0 +1,4 @@
+# Direct dependencies; requirements.lock.txt records the validated full environment.
+pyarrow>=19,<24
+snowflake-connector-python>=3.14,<5
+python-dotenv>=1,<2

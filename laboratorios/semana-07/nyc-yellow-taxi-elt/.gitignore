@@ -1,0 +1,45 @@
+# Configuración local y secretos
+.env
+.env.*
+!.env.example
+profiles.yml
+*.pem
+*.key
+credentials*.json
+service-account*.json
+
+# Datos y descargas (también en subdirectorios)
+*.[pP][aA][rR][qQ][uU][eE][tT]
+*.parq
+*.partial
+*.part
+/data/
+/logs/
+/reports/
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# dbt e infraestructura local
+target/
+dbt_packages/
+logs/
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfplan
+/infrastructure/volumes/
+
+# Editores y sistema operativo
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
