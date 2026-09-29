@@ -1,12 +1,10 @@
-"""Run from project root: python -m ingestion.pipeline verify|download|load."""
+"""TLC verification and validated content-addressed downloads."""
 import argparse
 import hashlib
 import json
-import os
 import time
 import urllib.error
 import urllib.request
-import uuid
 from datetime import datetime, timezone
 from html.parser import HTMLParser
 from pathlib import Path
@@ -155,6 +153,36 @@ def download(row, directory):
         temporary.unlink(missing_ok=True)
 
 
+def verify_local_file(row):
+    """Do not trust a report/cache as proof that the bytes still match."""
+    path = Path(row['path'])
+    digest = hashlib.sha256()
+    with path.open('rb') as source:
+        for block in iter(lambda: source.read(1024 * 1024), b''):
+            digest.update(block)
+    if digest.hexdigest() != row['sha256'] or path.stat().st_size != row['bytes']:
+        raise ValueError('Local file integrity mismatch')
+    if validate_parquet(path) != row['rows']:
+        raise ValueError('Local row count mismatch')
+
+
+def cached_download(row, directory, refresh=False):
+    """Reuse only after fresh HEAD evidence AND local SHA/schema/row validation."""
+    index = directory / 'index' / f"{row['month']}.json"
+    if index.exists() and not refresh and row.get('etag') and row.get('last_modified'):
+        cached = json.loads(index.read_text(encoding='utf-8'))
+        if all(str(cached.get(key)) == str(row.get(key))
+               for key in ('url', 'etag', 'last_modified', 'size')):
+            try:
+                verify_local_file(cached)
+                return {key: cached[key] for key in ('path', 'sha256', 'rows', 'bytes')}
+            except (OSError, ValueError):
+                pass
+    result = download(row, directory)
+    write_json(index, {**row, **result})
+    return result
+
+
 def summarize(rows, phase):
     if len(rows) != 20 or {r['month'] for r in rows} != set(MONTHS):
         raise ValueError('Expected exactly the 20 contracted months')
@@ -170,71 +198,15 @@ def summarize(rows, phase):
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('phase', choices=('verify', 'download', 'load'))
-    args = parser.parse_args()
-    # Download/load need external dependencies; verification and tests use stdlib.
-    if args.phase != 'verify':
-        from dotenv import load_dotenv
-        load_dotenv(ROOT / '.env', override=False)
-    data = ROOT / 'data'
-    data.mkdir(exist_ok=True)
-    lock = data / 'pipeline.lock'
-    try:
-        descriptor = os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
-    except FileExistsError:
-        parser.exit(1, 'Another run or stale data/pipeline.lock exists; inspect before retrying.\n')
-    os.close(descriptor)
-    connection = None
-    rows = []
-    run_id = uuid.uuid4().hex
-
-    def save(result):
-        result['run_id'] = run_id
-        write_json(ROOT / 'reports' / 'runs' / f'{run_id}.json', result)
-        write_json(ROOT / 'reports' / f'{args.phase}.json', result)
-
-    try:
-        rows = verify()
-        for row in rows:
-            row['operation'] = 'not_started'
-        write_json(ROOT / 'reports' / 'availability.json', rows)
-        save(summarize(rows, args.phase))
-        if args.phase == 'load' and any(r['availability'] == 'available' for r in rows):
-            from ingestion.snowflake_loader import connect
-            connection = connect()
-        for row in rows:
-            if args.phase == 'verify' or row['availability'] != 'available':
-                continue
-            try:
-                row['operation'] = 'running'
-                save(summarize(rows, args.phase))
-                row.update(download(row, data))
-                row['operation'] = 'downloaded'
-                if args.phase == 'load':
-                    from ingestion.snowflake_loader import load_month
-                    row['load_action'] = load_month(connection, row)
-                    row['operation'] = 'loaded'
-            except Exception as exc:
-                # Do not serialize connector messages: they may contain account details.
-                row['operation'], row['error'] = 'failed', type(exc).__name__
-            save(summarize(rows, args.phase))
-        result = summarize(rows, args.phase)
-        save(result)
-        print(json.dumps({k: v for k, v in result.items() if k != 'files'}))
-        return {'COMPLETE': 0, 'INCOMPLETE': 2, 'FAILED': 1}[result['status']]
-    except Exception as exc:
-        result = dict(phase=args.phase, status='FAILED', pipeline_status='FAILED',
-                      error=type(exc).__name__, expected=20, files=rows, checked_at=now())
-        save(result)
-        print(json.dumps({k: v for k, v in result.items() if k != 'files'}))
-        return 1
-    finally:
-        try:
-            if connection:
-                connection.close()
-        finally:
-            lock.unlink(missing_ok=True)
+    parser = argparse.ArgumentParser(description='Public TLC inventory; use ingestion.workflow for ELT')
+    parser.add_argument('phase', choices=('verify',))
+    parser.parse_args()
+    rows = verify()
+    result = summarize(rows, 'verify')
+    write_json(ROOT / 'reports' / 'availability.json', rows)
+    write_json(ROOT / 'reports' / 'verify.json', result)
+    print(json.dumps({k: v for k, v in result.items() if k != 'files'}))
+    return {'COMPLETE': 0, 'INCOMPLETE': 2, 'FAILED': 1}[result['status']]
 
 
 if __name__ == '__main__':

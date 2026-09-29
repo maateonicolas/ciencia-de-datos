@@ -1,0 +1,565 @@
+version: 2
+models:
+- name: bronze_trips
+  description: Una fila física del Parquet vigente, sin deduplicación de negocio; conserva payload y linaje completo.
+  columns:
+  - name: source_record_key
+    data_tests:
+    - not_null
+    - unique
+    description: SHA-256 de mes, hash del archivo y número físico de fila; identidad técnica de origen.
+  - name: source_file
+    description: Nombre original del archivo Parquet.
+  - name: source_month
+    description: Mes del archivo de origen; no se sustituye por el mes de recogida.
+  - name: source_sha256
+    description: SHA-256 calculado sobre los bytes completos y validados del Parquet.
+  - name: source_row
+    description: Posición física de la fila en el archivo, obtenida por COPY.
+  - name: loaded_at
+    description: Fecha/hora de la carga original de la versión vigente en Snowflake.
+  - name: payload
+    description: Registro original como VARIANT para trazabilidad y auditoría.
+- name: bronze_zones
+  description: Una zona del catálogo oficial TLC, con hash y fecha de carga del CSV.
+  columns:
+  - name: location_id
+    data_tests:
+    - not_null
+    - unique
+- name: silver_trips
+  description: Una fila física válida. Mantiene viajes iguales que provienen de posiciones distintas del archivo.
+  columns:
+  - name: source_record_key
+    data_tests:
+    - not_null
+    - unique
+    - relationships:
+        arguments:
+          to: ref('bronze_trips')
+          field: source_record_key
+    description: SHA-256 de mes, hash del archivo y número físico de fila; identidad técnica de origen.
+  - name: source_file
+    description: Nombre original del archivo Parquet.
+  - name: source_month
+    description: Mes del archivo de origen; no se sustituye por el mes de recogida.
+  - name: source_sha256
+    description: SHA-256 calculado sobre los bytes completos y validados del Parquet.
+  - name: source_row
+    description: Posición física de la fila en el archivo, obtenida por COPY.
+  - name: loaded_at
+    description: Fecha/hora de la carga original de la versión vigente en Snowflake.
+  - name: source_occurrence
+    description: Orden de ocurrencia dentro de una identidad física; mayor que uno indica duplicación de ingesta.
+  - name: pickup_at
+    description: Timestamp local de recogida en NYC, sin zona; no se inventa una resolución DST.
+  - name: dropoff_at
+    description: Timestamp local de destino en NYC, sin zona.
+  - name: passenger_count
+    description: Pasajeros enteros no negativos; desconocido o inválido permanece NULL.
+  - name: trip_distance_miles
+    description: Distancia registrada en millas, decimal(18,4); cero se conserva con advertencia.
+  - name: fare_amount
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: extra
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: mta_tax
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: tip_amount
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes. No incluye propinas en efectivo.
+  - name: tolls_amount
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: improvement_surcharge
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: total_amount
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: congestion_surcharge
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: airport_fee
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: cbd_congestion_fee
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: payload
+    description: Registro original como VARIANT para trazabilidad y auditoría.
+  - name: duration_seconds
+    description: Diferencia en segundos entre destino y recogida.
+  - name: quality_flags
+    description: Advertencias que no eliminan por sí mismas un viaje.
+  - name: identical_payload_count
+    description: Número de filas con el mismo hash de payload; solo diagnóstico, no criterio para eliminar viajes.
+  - name: rejection_reasons
+    description: Reglas de invalidez incumplidas; arreglo no vacío en rechazados.
+  - name: is_valid
+    description: Cumple fechas presentes/ordenadas, distancia no negativa y total presente.
+- name: silver_rejected
+  description: Una fila física inválida, con motivos de rechazo y linaje para auditoría.
+  columns:
+  - name: source_record_key
+    data_tests:
+    - not_null
+    - unique
+    - relationships:
+        arguments:
+          to: ref('bronze_trips')
+          field: source_record_key
+    description: SHA-256 de mes, hash del archivo y número físico de fila; identidad técnica de origen.
+  - name: source_file
+    description: Nombre original del archivo Parquet.
+  - name: source_month
+    description: Mes del archivo de origen; no se sustituye por el mes de recogida.
+  - name: source_sha256
+    description: SHA-256 calculado sobre los bytes completos y validados del Parquet.
+  - name: source_row
+    description: Posición física de la fila en el archivo, obtenida por COPY.
+  - name: loaded_at
+    description: Fecha/hora de la carga original de la versión vigente en Snowflake.
+  - name: source_occurrence
+    description: Orden de ocurrencia dentro de una identidad física; mayor que uno indica duplicación de ingesta.
+  - name: pickup_at
+    description: Timestamp local de recogida en NYC, sin zona; no se inventa una resolución DST.
+  - name: dropoff_at
+    description: Timestamp local de destino en NYC, sin zona.
+  - name: passenger_count
+    description: Pasajeros enteros no negativos; desconocido o inválido permanece NULL.
+  - name: trip_distance_miles
+    description: Distancia registrada en millas, decimal(18,4); cero se conserva con advertencia.
+  - name: fare_amount
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: extra
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: mta_tax
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: tip_amount
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes. No incluye propinas en efectivo.
+  - name: tolls_amount
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: improvement_surcharge
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: total_amount
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: congestion_surcharge
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: airport_fee
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: cbd_congestion_fee
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: payload
+    description: Registro original como VARIANT para trazabilidad y auditoría.
+  - name: duration_seconds
+    description: Diferencia en segundos entre destino y recogida.
+  - name: quality_flags
+    description: Advertencias que no eliminan por sí mismas un viaje.
+  - name: identical_payload_count
+    description: Número de filas con el mismo hash de payload; solo diagnóstico, no criterio para eliminar viajes.
+  - name: rejection_reasons
+    description: Reglas de invalidez incumplidas; arreglo no vacío en rechazados.
+  - name: is_valid
+    description: Cumple fechas presentes/ordenadas, distancia no negativa y total presente.
+- name: dim_date
+  description: Una fecha local observada, clave YYYYMMDD. Se utiliza para recogida y destino.
+  columns:
+  - name: date_key
+    data_tests:
+    - not_null
+    - unique
+    description: Clave lógica de la dimensión; integridad verificada con pruebas dbt.
+  - name: calendar_date
+    description: Fecha de calendario local.
+  - name: year
+    description: Año calendario.
+  - name: month
+    description: Mes calendario 1–12.
+  - name: day
+    description: Día del mes.
+  - name: weekday_iso
+    description: Día ISO, lunes 1 a domingo 7.
+- name: dim_zone
+  description: Una LocationID oficial más miembro desconocido -1. Roles de recogida y destino.
+  columns:
+  - name: zone_key
+    data_tests:
+    - not_null
+    - unique
+    description: Clave lógica de la dimensión; integridad verificada con pruebas dbt.
+  - name: borough
+    description: Distrito del catálogo oficial; no inferido por coordenadas.
+  - name: zone
+    description: Nombre oficial de la zona.
+  - name: service_zone
+    description: Área de servicio del catálogo.
+- name: dim_vendor
+  description: Un código oficial de proveedor más miembro desconocido -1.
+  columns:
+  - name: vendor_key
+    data_tests:
+    - not_null
+    - unique
+    description: Clave lógica de la dimensión; integridad verificada con pruebas dbt.
+- name: dim_payment
+  description: Un código oficial de pago más miembro desconocido -1; no mide propinas en efectivo.
+  columns:
+  - name: payment_key
+    data_tests:
+    - not_null
+    - unique
+    description: Clave lógica de la dimensión; integridad verificada con pruebas dbt.
+- name: dim_rate
+  description: Un código oficial de tarifa más miembro desconocido -1.
+  columns:
+  - name: rate_key
+    data_tests:
+    - not_null
+    - unique
+    description: Clave lógica de la dimensión; integridad verificada con pruebas dbt.
+- name: fact_trips
+  description: Una fila física válida de origen; trip_key es source_record_key. Siete FKs lógicas verificadas por
+    dbt.
+  columns:
+  - name: trip_key
+    data_tests:
+    - not_null
+    - unique
+    description: Clave lógica del viaje físico válido de origen.
+  - name: pickup_date_key
+    data_tests:
+    - not_null
+    - relationships:
+        arguments:
+          to: ref('dim_date')
+          field: date_key
+    description: Clave lógica de la dimensión; integridad verificada con pruebas dbt.
+  - name: dropoff_date_key
+    data_tests:
+    - not_null
+    - relationships:
+        arguments:
+          to: ref('dim_date')
+          field: date_key
+    description: Clave lógica de la dimensión; integridad verificada con pruebas dbt.
+  - name: pickup_zone_key
+    data_tests:
+    - not_null
+    - relationships:
+        arguments:
+          to: ref('dim_zone')
+          field: zone_key
+    description: Clave lógica de la dimensión; integridad verificada con pruebas dbt.
+  - name: dropoff_zone_key
+    data_tests:
+    - not_null
+    - relationships:
+        arguments:
+          to: ref('dim_zone')
+          field: zone_key
+    description: Clave lógica de la dimensión; integridad verificada con pruebas dbt.
+  - name: vendor_key
+    data_tests:
+    - not_null
+    - relationships:
+        arguments:
+          to: ref('dim_vendor')
+          field: vendor_key
+    description: Clave lógica de la dimensión; integridad verificada con pruebas dbt.
+  - name: payment_key
+    data_tests:
+    - not_null
+    - relationships:
+        arguments:
+          to: ref('dim_payment')
+          field: payment_key
+    description: Clave lógica de la dimensión; integridad verificada con pruebas dbt.
+  - name: rate_key
+    data_tests:
+    - not_null
+    - relationships:
+        arguments:
+          to: ref('dim_rate')
+          field: rate_key
+    description: Clave lógica de la dimensión; integridad verificada con pruebas dbt.
+  - name: source_record_key
+    data_tests:
+    - not_null
+    - relationships:
+        arguments:
+          to: ref('silver_trips')
+          field: source_record_key
+    description: SHA-256 de mes, hash del archivo y número físico de fila; identidad técnica de origen.
+  - name: source_file
+    description: Nombre original del archivo Parquet.
+  - name: source_month
+    description: Mes del archivo de origen; no se sustituye por el mes de recogida.
+  - name: source_sha256
+    description: SHA-256 calculado sobre los bytes completos y validados del Parquet.
+  - name: source_row
+    description: Posición física de la fila en el archivo, obtenida por COPY.
+  - name: loaded_at
+    description: Fecha/hora de la carga original de la versión vigente en Snowflake.
+  - name: pickup_at
+    description: Timestamp local de recogida en NYC, sin zona; no se inventa una resolución DST.
+  - name: dropoff_at
+    description: Timestamp local de destino en NYC, sin zona.
+  - name: passenger_count
+    description: Pasajeros enteros no negativos; desconocido o inválido permanece NULL.
+  - name: trip_distance_miles
+    description: Distancia registrada en millas, decimal(18,4); cero se conserva con advertencia.
+  - name: fare_amount
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: extra
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: mta_tax
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: tip_amount
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes. No incluye propinas en efectivo.
+  - name: tolls_amount
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: improvement_surcharge
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: total_amount
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: congestion_surcharge
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: airport_fee
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: cbd_congestion_fee
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: duration_seconds
+    description: Diferencia en segundos entre destino y recogida.
+  - name: quality_flags
+    description: Advertencias que no eliminan por sí mismas un viaje.
+  - name: identical_payload_count
+    description: Número de filas con el mismo hash de payload; solo diagnóstico, no criterio para eliminar viajes.
+- name: data_coverage
+  description: Un mes del contrato fijo de 20 meses, incluidos los pendientes; recuentos por capa y estado de carga.
+  columns:
+  - name: source_month
+    data_tests:
+    - not_null
+    - unique
+- name: silver_typed
+  description: Tipos consistentes con conversiones TRY; conserva nulos y payload original sin imputaciones arbitrarias.
+  columns:
+  - name: source_record_key
+    description: SHA-256 de mes, hash del archivo y número físico de fila; identidad técnica de origen.
+  - name: source_file
+    description: Nombre original del archivo Parquet.
+  - name: source_month
+    description: Mes del archivo de origen; no se sustituye por el mes de recogida.
+  - name: source_sha256
+    description: SHA-256 calculado sobre los bytes completos y validados del Parquet.
+  - name: source_row
+    description: Posición física de la fila en el archivo, obtenida por COPY.
+  - name: loaded_at
+    description: Fecha/hora de la carga original de la versión vigente en Snowflake.
+  - name: pickup_at
+    description: Timestamp local de recogida en NYC, sin zona; no se inventa una resolución DST.
+  - name: dropoff_at
+    description: Timestamp local de destino en NYC, sin zona.
+  - name: passenger_count
+    description: Pasajeros enteros no negativos; desconocido o inválido permanece NULL.
+  - name: trip_distance_miles
+    description: Distancia registrada en millas, decimal(18,4); cero se conserva con advertencia.
+  - name: fare_amount
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: extra
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: mta_tax
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: tip_amount
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes. No incluye propinas en efectivo.
+  - name: tolls_amount
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: improvement_surcharge
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: total_amount
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: congestion_surcharge
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: airport_fee
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: cbd_congestion_fee
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: payload
+    description: Registro original como VARIANT para trazabilidad y auditoría.
+- name: silver_quality
+  description: 'Calidad materializada: una fila por registro Bronze, validez, advertencias y ocurrencias de identidad
+    física.'
+  columns:
+  - name: source_record_key
+    description: SHA-256 de mes, hash del archivo y número físico de fila; identidad técnica de origen.
+  - name: source_file
+    description: Nombre original del archivo Parquet.
+  - name: source_month
+    description: Mes del archivo de origen; no se sustituye por el mes de recogida.
+  - name: source_sha256
+    description: SHA-256 calculado sobre los bytes completos y validados del Parquet.
+  - name: source_row
+    description: Posición física de la fila en el archivo, obtenida por COPY.
+  - name: loaded_at
+    description: Fecha/hora de la carga original de la versión vigente en Snowflake.
+  - name: source_occurrence
+    description: Orden de ocurrencia dentro de una identidad física; mayor que uno indica duplicación de ingesta.
+  - name: pickup_at
+    description: Timestamp local de recogida en NYC, sin zona; no se inventa una resolución DST.
+  - name: dropoff_at
+    description: Timestamp local de destino en NYC, sin zona.
+  - name: passenger_count
+    description: Pasajeros enteros no negativos; desconocido o inválido permanece NULL.
+  - name: trip_distance_miles
+    description: Distancia registrada en millas, decimal(18,4); cero se conserva con advertencia.
+  - name: fare_amount
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: extra
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: mta_tax
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: tip_amount
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes. No incluye propinas en efectivo.
+  - name: tolls_amount
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: improvement_surcharge
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: total_amount
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: congestion_surcharge
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: airport_fee
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: cbd_congestion_fee
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: payload
+    description: Registro original como VARIANT para trazabilidad y auditoría.
+  - name: duration_seconds
+    description: Diferencia en segundos entre destino y recogida.
+  - name: quality_flags
+    description: Advertencias que no eliminan por sí mismas un viaje.
+  - name: identical_payload_count
+    description: Número de filas con el mismo hash de payload; solo diagnóstico, no criterio para eliminar viajes.
+  - name: rejection_reasons
+    description: Reglas de invalidez incumplidas; arreglo no vacío en rechazados.
+  - name: is_valid
+    description: Cumple fechas presentes/ordenadas, distancia no negativa y total presente.
+- name: silver_duplicate_rows
+  description: Ocurrencias adicionales de una identidad física; no son duplicados por atributos de negocio. Su presencia
+    hace fallar la prueba de integridad.
+  columns:
+  - name: source_record_key
+    description: SHA-256 de mes, hash del archivo y número físico de fila; identidad técnica de origen.
+  - name: source_file
+    description: Nombre original del archivo Parquet.
+  - name: source_month
+    description: Mes del archivo de origen; no se sustituye por el mes de recogida.
+  - name: source_sha256
+    description: SHA-256 calculado sobre los bytes completos y validados del Parquet.
+  - name: source_row
+    description: Posición física de la fila en el archivo, obtenida por COPY.
+  - name: loaded_at
+    description: Fecha/hora de la carga original de la versión vigente en Snowflake.
+  - name: source_occurrence
+    description: Orden de ocurrencia dentro de una identidad física; mayor que uno indica duplicación de ingesta.
+  - name: pickup_at
+    description: Timestamp local de recogida en NYC, sin zona; no se inventa una resolución DST.
+  - name: dropoff_at
+    description: Timestamp local de destino en NYC, sin zona.
+  - name: passenger_count
+    description: Pasajeros enteros no negativos; desconocido o inválido permanece NULL.
+  - name: trip_distance_miles
+    description: Distancia registrada en millas, decimal(18,4); cero se conserva con advertencia.
+  - name: fare_amount
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: extra
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: mta_tax
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: tip_amount
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes. No incluye propinas en efectivo.
+  - name: tolls_amount
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: improvement_surcharge
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: total_amount
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: congestion_surcharge
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: airport_fee
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: cbd_congestion_fee
+    description: Importe registrado en USD, decimal(18,4); NULL no se imputa como cero y valores negativos pueden
+      ser ajustes.
+  - name: payload
+    description: Registro original como VARIANT para trazabilidad y auditoría.
+  - name: duration_seconds
+    description: Diferencia en segundos entre destino y recogida.
+  - name: quality_flags
+    description: Advertencias que no eliminan por sí mismas un viaje.
+  - name: identical_payload_count
+    description: Número de filas con el mismo hash de payload; solo diagnóstico, no criterio para eliminar viajes.
+  - name: rejection_reasons
+    description: Reglas de invalidez incumplidas; arreglo no vacío en rechazados.
+  - name: is_valid
+    description: Cumple fechas presentes/ordenadas, distancia no negativa y total presente.
+seeds:
+- name: expected_months
+  columns:
+  - name: source_month
+    data_tests:
+    - not_null
+    - unique

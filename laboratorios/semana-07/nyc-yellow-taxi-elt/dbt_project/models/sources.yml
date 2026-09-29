@@ -1,0 +1,38 @@
+version: 2
+sources:
+  - name: raw
+    database: "{{ env_var('SNOWFLAKE_DATABASE', 'NYC_TAXI') }}"
+    schema: RAW
+    tables:
+      - name: yellow_trips
+        description: "One physical source row, original VARIANT and immutable lineage."
+        columns:
+          - name: payload
+            data_tests: [not_null]
+          - name: source_file
+            data_tests: [not_null]
+          - name: source_month
+            data_tests: [not_null]
+          - name: source_sha256
+            data_tests: [not_null]
+          - name: source_row
+            data_tests: [not_null]
+          - name: loaded_at
+            data_tests: [not_null]
+      - name: load_manifest
+        columns:
+          - name: source_month
+            data_tests: [not_null, unique]
+          - name: sha256
+            data_tests: [not_null]
+          - name: row_count
+            data_tests: [not_null]
+      - name: taxi_zones
+        description: "Official TLC CSV, transactionally replaced with source checksum."
+        columns:
+          - name: location_id
+            data_tests: [not_null, unique]
+          - name: source_sha256
+            data_tests: [not_null]
+          - name: loaded_at
+            data_tests: [not_null]

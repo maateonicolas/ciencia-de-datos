@@ -1,114 +1,138 @@
-# Diseño de ingesta y modelo objetivo
+# Diseño implementado
 
 ## Contrato y estados
 
-Universo fijo: `2025-01` a `2026-08`, 20 archivos Yellow Taxi. La ausencia de
-agosto en el listado oficial mantiene la entrega `INCOMPLETE`.
+Universo fijo: enero–diciembre 2025 y enero–agosto 2026. El inventario consulta
+los 20 archivos en cada ejecución; el modo piloto solo limita qué meses procesa.
+Disponibilidad, descarga, carga y aceptación son estados distintos.
 
-Se registra publicación oficial, HTTP y metadatos por separado. Un 403 de un
-archivo listado es `check_failed`; si no figura en la página, se registra
-`pending_publication` y se conserva el 403 sin inferir que el objeto no existe.
-No poder consultar o interpretar la página produce `check_failed`.
+`available`: enlace oficial y HTTP 200/206. `pending_publication`: mes no
+listado o enlace listado que responde 404. Si un mes no listado responde 403,
+se conserva ese código sin afirmar inexistencia. Un fallo técnico sobre un
+enlace listado o no poder leer la página produce `check_failed`.
 
-Disponibilidad: `available / pending_publication / check_failed`.
-Operación: `not_started / running / downloaded / loaded / failed`.
-Reportes por ID en `reports/runs/`, escritos mediante renombrado atómico.
-El manifiesto Snowflake es la autoridad de cargas confirmadas; un reporte local
-no demuestra la existencia de datos remotos. El comando vuelve a comprobar
-conteos antes de omitir una versión idéntica.
+Cada ejecución tiene ID nuevo y reportes propios. Una etapa intermedia terminada
+devuelve 0, pero conserva negocio INCOMPLETE. El reporte final devuelve 0/SUCCESS
+solo con 20 meses accesibles, validados y cargados, cobertura remota 20/20 y todas
+las pruebas dbt aprobadas. Devuelve 2/INCOMPLETE si falta cobertura; 1/FAILED por
+error técnico. Kestra no presenta cobertura incompleta como éxito.
 
-Salida 0 significa etapa completa; 2, cobertura incompleta; 1, fallo técnico.
-`pipeline_status` sigue `INCOMPLETE` incluso cuando una etapa completa 20/20:
-todavía faltan dbt y sus pruebas. Esta versión nunca emite SUCCESS global.
+## Ingesta e idempotencia
 
-## Idempotencia implementada
+1. Inventario completo, con comprobación de conexión/permisos antes de descargar
+   en modo ELT. La carga masiva requiere evidencia de dos pilotos iguales.
+2. Caché por SHA-256: reusar únicamente si los metadatos remotos de una consulta
+   nueva coinciden y el archivo local pasa SHA, tamaño, esquema y lectura completa.
+   ETag no es un checksum local. `--refresh` ignora caché.
+3. Descargar hasta cuatro meses simultáneamente, cada uno a su temporal;
+   solo el hilo principal actualiza el reporte. Comprobar Content-Length y decodificar todos los lotes
+   Parquet. Archivo vacío, truncado o sin columnas requeridas se rechaza.
+   Renombrar atómicamente solo después de validarlo.
+4. Antes del PUT volver a verificar los bytes locales. Una consulta consistente
+   comprueba manifiesto, hash, conteo total y números físicos distintos: si la
+   versión ya está cargada, no se vuelve a transferir. El stage conserva el
+   Parquet original por mes/hash. COPY a tabla temporal conserva payload VARIANT,
+   tipos lógicos Parquet y número físico de fila; exige conteo y filas distintas.
+5. Hasta cuatro conexiones independientes preparan PUT/COPY en paralelo.
+   Las transacciones de reemplazo se serializan mediante el mutex compartido:
+   BEGIN → UPDATE mutex → comprobar manifiesto y conteos → omitir versión
+   idéntica o DELETE+INSERT del mes y manifiesto → COMMIT. ROLLBACK ante fallo.
+   No se reemplaza una carga válida por una descarga incompleta.
+6. La historia automática de COPY no garantiza esta idempotencia: se usa el
+   manifiesto propio. FORCE solo opera sobre una temporal nueva.
+   Los duplicados de origen permanecen intactos en RAW.
 
-1. Verificar los 20 meses; procesar solo enlaces oficiales accesibles.
-2. Descargar a `.partial`, comprobar longitud, decodificar todas las filas
-   Parquet por lotes y exigir columnas mínimas. Rechazar archivos vacíos o
-   estructuralmente inválidos sin filtrar valores de negocio.
-3. Calcular SHA-256 y renombrar a `data/<sha256>/yellow_tripdata_YYYY-MM.parquet`.
-   Cada ejecución descarga otra vez para detectar revisiones. ETag no se trata
-   como checksum. La optimización HTTP condicional queda para una próxima etapa.
-4. PUT del original a stage por mes/hash. COPY a tabla temporal con
-   `ON_ERROR=ABORT_STATEMENT`, payload VARIANT y `METADATA$FILE_ROW_NUMBER`.
-   Comparar conteo total y filas físicas distintas con PyArrow.
-5. BEGIN, actualizar mutex compartido, leer manifiesto y conteos. Hash y conteos
-   iguales: no insertar. Archivo nuevo, revisado o incompleto: DELETE del mes,
-   INSERT de todas sus filas y sustitución del manifiesto dentro de la transacción.
-6. COMMIT conjunto o ROLLBACK. PUT, DDL y COPY temporal van antes; DDL puede
-   confirmar implícitamente transacciones Snowflake.
+El bloqueo OS local cubre cada invocación y se libera tras una interrupción.
+Kestra serializa ejecuciones completas. El mutex remoto protege el reemplazo
+de tablas por escritores cooperantes. No mezclar orquestadores que reconstruyan
+dbt simultáneamente: dbt materializa modelos individualmente, no hay transacción
+global entre todos los modelos. Si dbt falla, el reporte FAILED invalida la entrega
+aunque algunos modelos hayan quedado actualizados.
 
-No se depende del historial automático de COPY. `FORCE=TRUE` solo carga una tabla
-temporal recién creada. Los archivos revisados se conservan por hash. Duplicados
-del origen permanecen en RAW/Bronze; repetir la carga no crea duplicados nuevos.
+## Bronze
 
-El bloqueo local evita dos procesos sobre el mismo directorio. Un cierre abrupto
-puede dejar `data/pipeline.lock`: comprobar que no queda proceso antes de retirarlo.
-El UPDATE de `INGESTION_MUTEX` serializa escritores que usan este protocolo,
-incluso desde otro host. Ejecutar bootstrap sin concurrencia y no escribir RAW
-desde procesos que omitan el mutex. No confiar en PRIMARY KEY declarativas de
-tablas estándar Snowflake. Integración, concurrencia y rollback reales siguen
-pendientes; los tests locales del cargador verifican el protocolo con un cursor simulado.
+`bronze_trips`: vista sobre RAW, una fila por fila física vigente. Clave lógica:
+SHA-256 de `source_month:source_sha256:source_row`. Conserva payload, archivo,
+mes de origen, hash y fecha de carga. No cambiar el mes por la fecha de pickup.
+Un reemplazo de archivo produce nuevas identidades porque cambió el origen.
+`bronze_zones` proyecta el CSV oficial con hash y fecha de carga.
 
-## Capas dbt previstas
+## Silver
 
-### Bronze
+`silver_typed` normaliza nombres y tipos. `silver_quality` materializa reglas,
+linaje, motivos de rechazo y advertencias una vez por ejecución.
+`silver_trips`, `silver_rejected` y `silver_duplicate_rows` son particiones
+disjuntas para reconciliación. El payload original sigue disponible en Silver.
 
-Una fila por fila física del archivo vigente, identificada por
-`source_month + source_sha256 + source_row`; conservar `source_file`, `loaded_at`
-y payload. No deduplicar ni corregir valores. El mes corresponde al archivo,
-no se recalcula con pickup: el origen puede incluir fechas fuera del período.
-El original binario se conserva en stage.
-
-### Silver
-
-`silver_trip_quality` conservará filas, valores originales, valores tipados y
-motivos de invalidez. Derivar válidos y rechazados sin eliminar silenciosamente.
-
-| Caso | Decisión propuesta y motivo |
+| Caso | Regla implementada / motivo |
 | --- | --- |
-| Tipos/fechas | TRY_TO_*; fallo a NULL más bandera, sin inventar valores |
-| Hora | TIMESTAMP_NTZ local NYC; no asumir UTC ni resolver ambigüedad DST sin evidencia |
-| Formatos | TRIM, vacío a NULL y códigos canónicos, preservando el original |
-| Nulos | Rechazar pickup/dropoff ausentes; pasajeros desconocidos siguen NULL, no imputar 1 |
-| Duración | Rechazar dropoff anterior a pickup; marcar extremos y medirlos antes de fijar umbrales |
-| Distancia | Rechazar negativos; conservar cero con bandera por posibles ajustes |
-| Importes | Conservar negativos con bandera de ajuste/reembolso; no aplicar valor absoluto ni borrar automáticamente |
-| Zonas/códigos | Dimensión con miembro desconocido -1; conservar también el código fuente |
-| Duplicados | Comparar todas las columnas de negocio canónicas; retener uno con orden determinista y contabilizar descartados |
-| Mes inconsistente | Señalar pickup fuera del mes del archivo; no mover la partición original |
+| Fechas | TRY_TO_TIMESTAMP_NTZ de la representación lógica; valor vacío/inválido pasa a NULL |
+| Zona horaria | Semántica local NYC, sin convertir a UTC ni inventar una resolución DST |
+| IDs enteros | Aceptar enteros y representaciones como 1.0; rechazar decimales fraccionarios, sin redondearlos a otro código |
+| Pasajeros | Nulo, fraccionario o negativo se deja desconocido; no imputar 1 ni eliminar el viaje |
+| Métricas | TRY_TO_DECIMAL(18,4), distancias en millas e importes en USD; no sustituir nulos por cero |
+| Aeropuerto | Admitir Airport_fee observado en enero 2025 y airport_fee; nombre final airport_fee |
+| Store flag | TRIM + mayúsculas; solo Y/N, demás NULL y advertencia |
+| Rechazo | Pickup/dropoff inválidos o ausentes, duración negativa, distancia inválida/ausente/negativa, total inválido/ausente |
+| Importe negativo | Conservar como posible ajuste/reembolso con bandera, no aplicar valor absoluto |
+| Distancia cero | Conservar con advertencia, sin asumir que es un viaje inexistente |
+| Mes fuera del archivo | Marcar, mantener mes de origen y fecha real por separado |
+| Código desconocido | Conservar código original, usar dimensión -1; no eliminar viaje |
+| Valores iguales | Contabilizar grupos hash(payload), sin deduplicar por esos valores |
+| Identidad física repetida | Conservar una ocurrencia para vistas de consumo, exponer resto por separado y hacer fallar prueba de integridad |
 
-No hay un ID de viaje universal. La deduplicación exacta es una hipótesis:
-viajes genuinos podrían compartir atributos. Medir su impacto y evitar claves
-débiles como pickup/dropoff solamente. Incluir `cbd_congestion_fee` desde 2025;
-RAW preserva también columnas nuevas no proyectadas aún.
+No existe ID universal de viaje en TLC. **No se eliminan dos filas físicas por
+compartir todos sus atributos de negocio.** El hash de payload es diagnóstico,
+puede tener colisiones y no es la clave del hecho. Los duplicados de ingesta se
+previenen con carga mensual atómica y se detectan con pruebas de identidad física.
 
-### Gold: estrella propuesta
+Los campos monetarios opcionales inválidos permanecen NULL; el payload permite
+auditar su valor original. No se impone un umbral arbitrario de duración, velocidad
+o precio. Esas reglas requerirían un análisis adicional y decisiones documentadas.
 
-| Tabla | Grano y clave | Atributos / métricas |
+## Gold y claves lógicas
+
+| Modelo | Grano / PK | Atributos, FKs y métricas |
 | --- | --- | --- |
-| fact_trips | Un viaje válido deduplicado; trip_key hash de columnas de negocio canónicas | FKs fecha pickup, zonas pickup/dropoff, proveedor, pago y tarifa; timestamps, pasajeros, distancia, duración, fare, tip, tolls, impuestos, recargos, cbd_congestion_fee, total y linaje |
-| dim_date | Un día local; date_key YYYYMMDD | Fecha, año, mes, día y día de semana |
-| dim_zone | Una zona TLC; zone_key LocationID, -1 desconocido | Borough, zone, service_zone; dimensión compartida para pickup/dropoff |
-| dim_vendor | Un código proveedor; vendor_key | Código y descripción oficial |
-| dim_payment | Un código de pago; payment_key | Código y descripción |
-| dim_rate | Un código de tarifa; rate_key | Código y descripción |
+| fact_trips | Una fila física de viaje válido; trip_key = source_record_key | FKs pickup_date_key, dropoff_date_key, pickup_zone_key, dropoff_zone_key, vendor_key, payment_key, rate_key; pasajeros, distancia, segundos, importes/desglose, timestamps y linaje |
+| dim_date | Una fecha local presente en viajes válidos; date_key YYYYMMDD | calendar_date, year, month, day, weekday_iso; roles pickup/dropoff |
+| dim_zone | Una LocationID del catálogo, más -1; zone_key | borough, zone, service_zone, hash del catálogo; roles pickup/dropoff |
+| dim_vendor | Un código de proveedor más -1 | nombre oficial; códigos 1,2,6,7 |
+| dim_payment | Un código de pago más -1 | códigos 0–6 y descripción |
+| dim_rate | Un código de tarifa más -1 | códigos 1–6,99 y descripción |
+| data_coverage | Un mes esperado, siempre 20 filas | hash, manifiesto, conteos Bronze/Silver/rechazados/duplicados/Gold y estado de carga |
 
-El CSV oficial de zonas es auxiliar y no sustituye ninguno de los 20 Parquet;
-se verificará y registrará su checksum al implementar dimensiones. Calcular
-promedios desde sumas/conteos, no promediar promedios. No asumir que tip_amount
-incluye propinas en efectivo.
+Son PK/FK lógicas comprobadas por dbt, no restricciones físicas garantizadas por
+Snowflake. Las dimensiones de códigos usan el diccionario TLC del 18/03/2025.
+El catálogo de 265 zonas es auxiliar y no cuenta como el archivo mensual 20.
+CSV validado por cabeceras, IDs positivos/únicos, nombres y checksum, cargado con
+reemplazo transaccional. La dimensión incluye un miembro -1 adicional.
 
-Pruebas dbt: `not_null` y `unique` en claves; `relationships` en cada FK,
-incluidas ambas zonas; `not_null` en linaje. Reconciliar Bronze = válidos +
-rechazados + duplicados descartados con categorías disjuntas; Silver válido =
-hechos. Una tabla de cobertura conserva los 20 meses y etiqueta Gold parcial.
-La entrega requiere 20 cargas confirmadas, `dbt build` e integración aprobados.
+SUM(total_amount) es importe registrado, puede incluir ajustes negativos y no
+representa necesariamente efectivo cobrado. tip_amount excluye propinas en
+efectivo. AVG se calcula desde viajes individuales, no promediando promedios.
+No asumir que fecha de pickup y mes del archivo coinciden.
 
-## Referencias
+## Pruebas y evidencia
 
+dbt: not_null/unique en claves; relationships para las siete FKs del hecho,
+incluidas las dos fechas/zonas, y para su linaje; conteos reconciliados:
+Bronze = Silver válido + rechazados + identidades repetidas; válido = Gold.
+El manifiesto debe coincidir con RAW y no hay meses fuera del contrato.
+Las pruebas unitarias SQL cubren viajes distintos con valores iguales, rechazos,
+nulos opcionales y reembolsos. Solo ejecutarlas en Snowflake constituye evidencia remota.
+
+El reporte consulta conteos y huellas por mes en RAW/Bronze/Silver/rechazados/Gold,
+huellas de dimensiones y consulta analítica Gold. `compare` exige resultados
+idénticos y carga repetida sin cambio. El gate de cobertura es externo a dbt:
+19 meses consistentes pueden pasar dbt sin convertir la entrega de 20 meses en éxito.
+
+## Referencias oficiales
+
+- [TLC y catálogo](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page)
+- [Diccionario Yellow Taxi](https://www.nyc.gov/assets/tlc/downloads/pdf/data_dictionary_trip_records_yellow.pdf)
 - [COPY INTO](https://docs.snowflake.com/en/sql-reference/sql/copy-into-table)
-- [Metadatos de archivos](https://docs.snowflake.com/en/user-guide/querying-metadata)
 - [Transacciones y DDL](https://docs.snowflake.com/en/sql-reference/transactions)
-- [Conector Python](https://docs.snowflake.com/en/developer-guide/python-connector/python-connector-example)
+- [Kestra Compose](https://kestra.io/docs/installation/docker-compose)
+- [Process runner](https://kestra.io/plugins/core/runner/io.kestra.plugin.core.runner.process)
+- [dbt Snowflake](https://docs.getdbt.com/docs/local/connect-data-platform/snowflake-setup)

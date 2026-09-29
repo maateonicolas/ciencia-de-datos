@@ -16,6 +16,15 @@ service-account*.json
 /data/
 /logs/
 /reports/
+/.runtime/
+/secrets/
+*.p8
+*.p12
+*.pfx
+*.sqlite*
+*.duckdb*
+*.tmp
+dbt_project/package-lock.yml
 
 # Python
 .venv/
