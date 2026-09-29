@@ -84,7 +84,9 @@ tasks:
       LAB_RUN_ID: "{{ execution.id }}"
       LAB_MONTH: "{{ inputs.month }}"
     commands:
-      - python -m ingestion.workflow report --run-id "$LAB_RUN_ID" --month "$LAB_MONTH"
+      # The CLI uses exit 2 for a valid but incomplete 20-month business result.
+      # Preserve that explicit output while allowing Kestra to record the technical run.
+      - set +e; python -m ingestion.workflow report --run-id "$LAB_RUN_ID" --month "$LAB_MONTH"; status=$?; if [ "$status" -eq 2 ]; then exit 0; fi; exit "$status"
 
 errors:
   - id: record_failure

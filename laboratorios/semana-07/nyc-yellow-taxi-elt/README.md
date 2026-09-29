@@ -15,7 +15,11 @@ en el listado y responde 403; ese código no demuestra inexistencia.
   resultados dbt e idempotencia en [validación](docs/validation.md).
 - Piloto remoto aprobado: 14 modelos, 66 pruebas dbt y repetición sin duplicados.
 - Los 19 Parquet publicados fueron descargados y validados: 75.089.241 filas originales.
-- Docker/Kestra aún no ejecutado: Docker no está instalado en este entorno.
+- Kestra y PostgreSQL se iniciaron con Compose. El flujo registrado ejecutó el
+  piloto `2025-01`: carga `unchanged`, 14 modelos y 66 pruebas dbt aprobadas.
+  La evidencia conserva `INCOMPLETE` para la cobertura 19/20; el ajuste del YAML
+  debe sincronizarse en la instancia autenticada para que ese estado no aparezca
+  como un fallo técnico de Kestra.
 - [.env.example](.env.example) contiene solo campos vacíos y nombres de ejemplo;
   credenciales, Parquet y artefactos locales están excluidos de Git.
 
@@ -149,9 +153,10 @@ Invoke-RestMethod -Method Post -Uri 'http://localhost:8080/api/v1/main/flows' -C
 
 Si la instancia tiene autenticación habilitada, usar su UI autenticada.
 El código de cada tarea es el mismo de la CLI, con `execution.id` como ID de reporte.
-Ver los seis pasos en la UI. `report` imprime el estado de negocio y sale 2
-ante cobertura incompleta: Kestra marcará esa ejecución FAILED, con negocio
-`INCOMPLETE`, en lugar de mostrar una carga de 20 meses exitosa.
+Ver los seis pasos en la UI. `report` imprime `business_status=INCOMPLETE` y la
+cobertura cuando faltan meses. El adaptador del flujo conserva esa evidencia, pero
+traduce solo el código 2 de cobertura incompleta en tarea técnica exitosa; los
+errores técnicos (código 1) siguen fallando la ejecución.
 
 Para validar idempotencia con dos ejecuciones Kestra, copiar sus IDs de la UI:
 

@@ -16,6 +16,8 @@ Los reportes completos, perfiles, logs y Parquet permanecen localmente fuera de 
 - Se corrigió el alias reservado ROWS del informe. El intento fallido snowflake-pilot-01 se conserva.
 - Los intentos secuenciales snowflake-available-01/02 se interrumpieron y quedaron FAILED; se reutilizaron caché válida y meses confirmados.
 - .env.example fue saneado antes del commit; auditoría del commit inicial sin coincidencias de la contraseña local.
+- Kestra ejecutó el flujo registrado `lab.semana07.nyc-yellow-taxi-elt` con `2025-01` (ejecución `1l89w7BQgKIZOnlz6ZRASm`). Inventario, descarga, carga `unchanged`, 14 modelos y 66 pruebas terminaron correctamente. El reporte confirmó 19/20 y `INCOMPLETE`.
+- El YAML ajustado conserva ese estado de negocio como salida y convierte solamente el código 2 esperado de cobertura incompleta en éxito técnico de la tarea. Los errores técnicos siguen devolviendo código 1.
 
 ## Recuentos remotos por mes de archivo
 
@@ -81,7 +83,6 @@ Las ejecuciones con cobertura parcial terminan con código 2, no 0. Fallos técn
 
 ## Pendiente
 
-- Verificar desde la sesión que controla Docker Desktop la interfaz y el registro del flujo Kestra. Esta sesión no pudo acceder al socket `dockerDesktopLinuxEngine` ni a `localhost:8080`, aunque Docker pueda estar activo en otra sesión.
-- Importar y ejecutar el flujo en Kestra con un mes disponible, y validar el Process runner y sus seis etapas. La ejecución por CLI no demuestra la orquestación dentro del contenedor.
+- Sincronizar el YAML ajustado con la instancia autenticada de Kestra y repetir el piloto para confirmar que la ejecución técnica queda en SUCCESS mientras conserva `business_status=INCOMPLETE`.
 - Esperar la publicación verificable de agosto de 2026; ejecutar de nuevo los 20 meses y sus pruebas.
 - No se declara el laboratorio completo ni se inventan datos del mes pendiente.

@@ -27,8 +27,21 @@
   "local_tests_passed": 23,
   "dbt_parse": "PASS",
   "compose_json_schema": "PASS",
-  "docker_engine": "UNAVAILABLE",
-  "kestra_execution": "NOT_RUN",
+  "docker_engine": "AVAILABLE",
+  "kestra_execution": "TECHNICAL_TASKS_PASS_BUSINESS_INCOMPLETE",
+  "kestra_run": {
+    "execution_id": "1l89w7BQgKIZOnlz6ZRASm",
+    "month": "2025-01",
+    "inventory": "PASS",
+    "download": "PASS",
+    "load_action": "unchanged",
+    "dbt_models_passed": 14,
+    "dbt_tests_passed": 66,
+    "coverage_loaded_months": 19,
+    "coverage_expected_months": 20,
+    "business_status": "INCOMPLETE",
+    "note": "The pre-adapter flow returned exit code 2 for valid incomplete coverage; Kestra marked only the report task FAILED."
+  },
   "pilot": {
     "run_id": "snowflake-pilot-03",
     "started_at": "2026-09-28T17:28:00.708114+00:00",
