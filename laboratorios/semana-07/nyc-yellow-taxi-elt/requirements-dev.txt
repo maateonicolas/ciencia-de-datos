@@ -1,0 +1,2 @@
+-r requirements.lock.txt
+sqlglot==28.10.1

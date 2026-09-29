@@ -1,0 +1,222 @@
+[
+  {
+    "month": "2025-01",
+    "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-01.parquet",
+    "checked_at": "2026-09-28T17:32:38.780090+00:00",
+    "listed": true,
+    "http_status": 200,
+    "size": "59158238",
+    "etag": "\"3f99a46606c0c7e76a386f81167d8e15-12\"",
+    "last_modified": "Wed, 23 Apr 2025 16:31:58 GMT",
+    "availability": "available"
+  },
+  {
+    "month": "2025-02",
+    "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-02.parquet",
+    "checked_at": "2026-09-28T17:32:39.213583+00:00",
+    "listed": true,
+    "http_status": 200,
+    "size": "60343086",
+    "etag": "\"d19a36ff5f2728d5fb856785ff055bda-12\"",
+    "last_modified": "Wed, 23 Apr 2025 16:16:58 GMT",
+    "availability": "available"
+  },
+  {
+    "month": "2025-03",
+    "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-03.parquet",
+    "checked_at": "2026-09-28T17:32:40.042488+00:00",
+    "listed": true,
+    "http_status": 200,
+    "size": "69964745",
+    "etag": "\"5a7b279b75549fe3c5270e995a5b8c02-14\"",
+    "last_modified": "Wed, 21 May 2025 15:29:16 GMT",
+    "availability": "available"
+  },
+  {
+    "month": "2025-04",
+    "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-04.parquet",
+    "checked_at": "2026-09-28T17:32:40.489540+00:00",
+    "listed": true,
+    "http_status": 200,
+    "size": "67352824",
+    "etag": "\"6cb85e58a1a6db7ef4610209de63c7ff-13\"",
+    "last_modified": "Wed, 25 Jun 2025 14:52:12 GMT",
+    "availability": "available"
+  },
+  {
+    "month": "2025-05",
+    "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-05.parquet",
+    "checked_at": "2026-09-28T17:32:40.851978+00:00",
+    "listed": true,
+    "http_status": 200,
+    "size": "77837865",
+    "etag": "\"82ed0af5930f3035156cb5f8cb248725-15\"",
+    "last_modified": "Wed, 25 Jun 2025 15:52:37 GMT",
+    "availability": "available"
+  },
+  {
+    "month": "2025-06",
+    "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-06.parquet",
+    "checked_at": "2026-09-28T17:32:41.100043+00:00",
+    "listed": true,
+    "http_status": 200,
+    "size": "73542954",
+    "etag": "\"fc94b9119612348a42e0887bb449b155-15\"",
+    "last_modified": "Fri, 25 Jul 2025 14:02:45 GMT",
+    "availability": "available"
+  },
+  {
+    "month": "2025-07",
+    "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-07.parquet",
+    "checked_at": "2026-09-28T17:32:41.929330+00:00",
+    "listed": true,
+    "http_status": 200,
+    "size": "66943728",
+    "etag": "\"16edd40595f73ceb5035197d0e652dbc-13\"",
+    "last_modified": "Thu, 21 Aug 2025 16:23:37 GMT",
+    "availability": "available"
+  },
+  {
+    "month": "2025-08",
+    "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-08.parquet",
+    "checked_at": "2026-09-28T17:32:42.183247+00:00",
+    "listed": true,
+    "http_status": 200,
+    "size": "62293743",
+    "etag": "\"7e65c5d9df82665d81d51f84f1e62011-12\"",
+    "last_modified": "Wed, 24 Sep 2025 14:18:54 GMT",
+    "availability": "available"
+  },
+  {
+    "month": "2025-09",
+    "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-09.parquet",
+    "checked_at": "2026-09-28T17:32:43.785121+00:00",
+    "listed": true,
+    "http_status": 200,
+    "size": "72432945",
+    "etag": "\"59e6ee2cf1cdaf10a4a380b13229c493-14\"",
+    "last_modified": "Thu, 23 Oct 2025 15:54:14 GMT",
+    "availability": "available"
+  },
+  {
+    "month": "2025-10",
+    "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-10.parquet",
+    "checked_at": "2026-09-28T17:32:45.297420+00:00",
+    "listed": true,
+    "http_status": 200,
+    "size": "75267589",
+    "etag": "\"3bdef91e79578e57e911fccdd8e00e24-15\"",
+    "last_modified": "Tue, 25 Nov 2025 15:27:50 GMT",
+    "availability": "available"
+  },
+  {
+    "month": "2025-11",
+    "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-11.parquet",
+    "checked_at": "2026-09-28T17:32:47.408366+00:00",
+    "listed": true,
+    "http_status": 200,
+    "size": "71134255",
+    "etag": "\"53a8054ab5bedeacf3da3cd159338e2e-14\"",
+    "last_modified": "Fri, 19 Dec 2025 15:51:29 GMT",
+    "availability": "available"
+  },
+  {
+    "month": "2025-12",
+    "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-12.parquet",
+    "checked_at": "2026-09-28T17:32:48.655463+00:00",
+    "listed": true,
+    "http_status": 200,
+    "size": "73701327",
+    "etag": "\"2c31ea7afe9bc1a94e01fd0833a06490-15\"",
+    "last_modified": "Wed, 25 Mar 2026 15:55:54 GMT",
+    "availability": "available"
+  },
+  {
+    "month": "2026-01",
+    "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2026-01.parquet",
+    "checked_at": "2026-09-28T17:32:48.757082+00:00",
+    "listed": true,
+    "http_status": 200,
+    "size": "64165080",
+    "etag": "\"715f1a37bbf83f6ec7b8d21038e8dc22-13\"",
+    "last_modified": "Wed, 25 Mar 2026 15:46:09 GMT",
+    "availability": "available"
+  },
+  {
+    "month": "2026-02",
+    "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2026-02.parquet",
+    "checked_at": "2026-09-28T17:32:48.843769+00:00",
+    "listed": true,
+    "http_status": 200,
+    "size": "58683353",
+    "etag": "\"41497120d17df99f437634b60f5b9d75-12\"",
+    "last_modified": "Wed, 25 Mar 2026 15:46:31 GMT",
+    "availability": "available"
+  },
+  {
+    "month": "2026-03",
+    "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2026-03.parquet",
+    "checked_at": "2026-09-28T17:32:48.910513+00:00",
+    "listed": true,
+    "http_status": 200,
+    "size": "67891249",
+    "etag": "\"7c9bd1bcac249e15858f8b1731c2039c-4\"",
+    "last_modified": "Tue, 28 Apr 2026 18:56:26 GMT",
+    "availability": "available"
+  },
+  {
+    "month": "2026-04",
+    "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2026-04.parquet",
+    "checked_at": "2026-09-28T17:32:48.977039+00:00",
+    "listed": true,
+    "http_status": 200,
+    "size": "64818115",
+    "etag": "\"39887281adfc4e33d959ff78c7cab632-4\"",
+    "last_modified": "Fri, 05 Jun 2026 20:44:34 GMT",
+    "availability": "available"
+  },
+  {
+    "month": "2026-05",
+    "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2026-05.parquet",
+    "checked_at": "2026-09-28T17:32:49.037610+00:00",
+    "listed": true,
+    "http_status": 200,
+    "size": "69699174",
+    "etag": "\"88babcd4eea8fabf135efb5b2b8cfc5c-5\"",
+    "last_modified": "Fri, 26 Jun 2026 21:07:20 GMT",
+    "availability": "available"
+  },
+  {
+    "month": "2026-06",
+    "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2026-06.parquet",
+    "checked_at": "2026-09-28T17:32:49.100686+00:00",
+    "listed": true,
+    "http_status": 200,
+    "size": "65465637",
+    "etag": "\"91b7716b26443cce54f6225273edf8e8-4\"",
+    "last_modified": "Thu, 17 Sep 2026 18:34:43 GMT",
+    "availability": "available"
+  },
+  {
+    "month": "2026-07",
+    "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2026-07.parquet",
+    "checked_at": "2026-09-28T17:32:49.158777+00:00",
+    "listed": true,
+    "http_status": 200,
+    "size": "61685033",
+    "etag": "\"2ff2995562ee9e1af375eea6020fdef1-4\"",
+    "last_modified": "Thu, 17 Sep 2026 21:03:03 GMT",
+    "availability": "available"
+  },
+  {
+    "month": "2026-08",
+    "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2026-08.parquet",
+    "checked_at": "2026-09-28T17:32:49.241535+00:00",
+    "listed": false,
+    "http_status": 403,
+    "size": null,
+    "etag": null,
+    "last_modified": null,
+    "availability": "pending_publication"
+  }
+]

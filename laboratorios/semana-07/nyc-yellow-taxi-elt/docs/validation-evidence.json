@@ -1,0 +1,2052 @@
+{
+  "checked_at": "2026-09-29T05:46:15.684906+00:00",
+  "status": "INCOMPLETE",
+  "expected_months": 20,
+  "published_months": 19,
+  "snowflake_months_loaded": [
+    "2025-01",
+    "2025-02",
+    "2025-03",
+    "2025-04",
+    "2025-05",
+    "2025-06",
+    "2025-07",
+    "2025-08",
+    "2025-09",
+    "2025-10",
+    "2025-11",
+    "2025-12",
+    "2026-01",
+    "2026-02",
+    "2026-03",
+    "2026-04",
+    "2026-05",
+    "2026-06",
+    "2026-07"
+  ],
+  "local_tests_passed": 23,
+  "dbt_parse": "PASS",
+  "compose_json_schema": "PASS",
+  "docker_engine": "AVAILABLE",
+  "kestra_execution": "TECHNICAL_TASKS_PASS_BUSINESS_INCOMPLETE",
+  "kestra_flow_revision": 2,
+  "kestra_flow_runtime_synced": true,
+  "kestra_run": {
+    "execution_id": "1l89w7BQgKIZOnlz6ZRASm",
+    "month": "2025-01",
+    "inventory": "PASS",
+    "download": "PASS",
+    "load_action": "unchanged",
+    "dbt_models_passed": 14,
+    "dbt_tests_passed": 66,
+    "coverage_loaded_months": 19,
+    "coverage_expected_months": 20,
+    "business_status": "INCOMPLETE",
+    "note": "The pre-adapter flow returned exit code 2 for valid incomplete coverage; Kestra marked only the report task FAILED."
+  },
+  "pilot": {
+    "run_id": "snowflake-pilot-03",
+    "started_at": "2026-09-28T17:28:00.708114+00:00",
+    "finished_at": "2026-09-28T17:29:14.683760+00:00",
+    "status": "INCOMPLETE",
+    "completed_phases": [
+      "inventory",
+      "download",
+      "load",
+      "dbt-run",
+      "dbt-test",
+      "report"
+    ],
+    "dbt_seed": {
+      "command": "seed",
+      "returncode": 0,
+      "nodes": [
+        {
+          "unique_id": "seed.nyc_taxi.expected_months",
+          "status": "success"
+        }
+      ]
+    },
+    "dbt_run": {
+      "command": "run",
+      "returncode": 0,
+      "nodes": [
+        {
+          "unique_id": "model.nyc_taxi.bronze_zones",
+          "status": "success"
+        },
+        {
+          "unique_id": "model.nyc_taxi.bronze_trips",
+          "status": "success"
+        },
+        {
+          "unique_id": "model.nyc_taxi.dim_payment",
+          "status": "success"
+        },
+        {
+          "unique_id": "model.nyc_taxi.dim_rate",
+          "status": "success"
+        },
+        {
+          "unique_id": "model.nyc_taxi.dim_vendor",
+          "status": "success"
+        },
+        {
+          "unique_id": "model.nyc_taxi.silver_typed",
+          "status": "success"
+        },
+        {
+          "unique_id": "model.nyc_taxi.dim_zone",
+          "status": "success"
+        },
+        {
+          "unique_id": "model.nyc_taxi.silver_quality",
+          "status": "success"
+        },
+        {
+          "unique_id": "model.nyc_taxi.silver_duplicate_rows",
+          "status": "success"
+        },
+        {
+          "unique_id": "model.nyc_taxi.silver_rejected",
+          "status": "success"
+        },
+        {
+          "unique_id": "model.nyc_taxi.silver_trips",
+          "status": "success"
+        },
+        {
+          "unique_id": "model.nyc_taxi.dim_date",
+          "status": "success"
+        },
+        {
+          "unique_id": "model.nyc_taxi.fact_trips",
+          "status": "success"
+        },
+        {
+          "unique_id": "model.nyc_taxi.data_coverage",
+          "status": "success"
+        }
+      ]
+    },
+    "dbt_test": {
+      "command": "test",
+      "returncode": 0,
+      "nodes": [
+        {
+          "unique_id": "test.nyc_taxi.manifest_matches_raw",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.expected_month_count",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.not_null_bronze_trips_source_record_key.50c65f78d5",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.not_null_bronze_zones_location_id.c92c0eab6a",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.not_null_dim_date_date_key.881d0a31b6",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.not_null_dim_payment_payment_key.b49bda51a0",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.not_null_data_coverage_source_month.17de3640d1",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.no_unexpected_month",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.not_null_dim_rate_rate_key.e58f7aa2bd",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.not_null_dim_vendor_vendor_key.385212c4ba",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.not_null_expected_months_source_month.44152cd286",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.not_null_dim_zone_zone_key.5c509768f0",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.not_null_fact_trips_dropoff_zone_key.6bf6e5cd07",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.not_null_fact_trips_dropoff_date_key.8449f8c8a1",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.not_null_fact_trips_payment_key.b154ba4122",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.not_null_fact_trips_pickup_date_key.d663f93fd8",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.not_null_fact_trips_pickup_zone_key.368ff10914",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.not_null_fact_trips_source_record_key.f0840a6017",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.not_null_fact_trips_trip_key.aecef47635",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.not_null_fact_trips_rate_key.ca6908d778",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.not_null_fact_trips_vendor_key.154e023150",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.not_null_silver_trips_source_record_key.19f225ba5b",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.not_null_silver_rejected_source_record_key.9a74bbb968",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.physical_duplicates_are_error",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.reconcile_layers",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.relationships_fact_trips_payment_key__payment_key__ref_dim_payment_.01385d5b1a",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.relationships_fact_trips_pickup_date_key__date_key__ref_dim_date_.497ae32f88",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.rejection_has_reason",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.relationships_fact_trips_dropoff_date_key__date_key__ref_dim_date_.909aada83c",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.relationships_fact_trips_dropoff_zone_key__zone_key__ref_dim_zone_.9d517b2bac",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.relationships_fact_trips_pickup_zone_key__zone_key__ref_dim_zone_.6a8c7958d2",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.relationships_fact_trips_rate_key__rate_key__ref_dim_rate_.f20e154afd",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.relationships_fact_trips_vendor_key__vendor_key__ref_dim_vendor_.046725581d",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.relationships_fact_trips_source_record_key__source_record_key__ref_silver_trips_.0aae28da82",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.relationships_silver_rejected_source_record_key__source_record_key__ref_bronze_trips_.1f735db014",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.source_not_null_raw_load_manifest_row_count.f0e8a693cb",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.source_not_null_raw_load_manifest_sha256.4eb24623ed",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.source_not_null_raw_load_manifest_source_month.ac8f76de86",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.source_not_null_raw_taxi_zones_location_id.47a72511cc",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.source_not_null_raw_taxi_zones_loaded_at.a83158882d",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.source_not_null_raw_taxi_zones_source_sha256.e9edb2a6a0",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.source_not_null_raw_yellow_trips_loaded_at.1efc5cc0f1",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.source_not_null_raw_yellow_trips_payload.e4968625a3",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.relationships_silver_trips_source_record_key__source_record_key__ref_bronze_trips_.2ce9a2bdfd",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.source_not_null_raw_yellow_trips_source_file.362fbba806",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.source_not_null_raw_yellow_trips_source_month.adff453d58",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.source_not_null_raw_yellow_trips_source_sha256.f7a7ba2cf0",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.source_not_null_raw_yellow_trips_source_row.83e1e84850",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.source_unique_raw_load_manifest_source_month.9edc7a5fd2",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.source_unique_raw_taxi_zones_location_id.65c9464786",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.unique_bronze_zones_location_id.51259650d4",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.unique_data_coverage_source_month.26eb9dd16d",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.unique_dim_date_date_key.0869fd48f9",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.unique_dim_payment_payment_key.48e220981f",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.unique_dim_rate_rate_key.a91fcf73de",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.unique_bronze_trips_source_record_key.0e8a7ac2dc",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.unique_dim_vendor_vendor_key.3de6f52c68",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.unique_dim_zone_zone_key.9eff645dea",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.unique_expected_months_source_month.d25ab3467b",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.unique_fact_trips_trip_key.15131ff52c",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.valid_trip_rules",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.unique_silver_rejected_source_record_key.55a43e55da",
+          "status": "pass"
+        },
+        {
+          "unique_id": "test.nyc_taxi.unique_silver_trips_source_record_key.139c2a8903",
+          "status": "pass"
+        },
+        {
+          "unique_id": "unit_test.nyc_taxi.silver_quality.refunds_and_null_passengers_are_retained_but_invalid_trips_are_rejected",
+          "status": "pass"
+        },
+        {
+          "unique_id": "unit_test.nyc_taxi.silver_trips.preserve_distinct_physical_trips_with_identical_business_values",
+          "status": "pass"
+        },
+        {
+          "unique_id": "unit_test.nyc_taxi.silver_rejected.preserve_original_row_in_rejections",
+          "status": "pass"
+        }
+      ]
+    },
+    "evidence": {
+      "coverage": [
+        {
+          "SOURCE_MONTH": "2025-01",
+          "SHA256": "9af277e4c0d3f9deb30644da822981e1e7df6af58313170fd3aa8a474485488a",
+          "MANIFEST_ROWS": 3475226,
+          "ROWS_BRONZE": 3475226,
+          "ROWS_SILVER": 3475102,
+          "ROWS_REJECTED": 124,
+          "ROWS_DUPLICATE": 0,
+          "ROWS_GOLD": 3475102,
+          "LOAD_STATUS": "LOADED"
+        },
+        {
+          "SOURCE_MONTH": "2025-02",
+          "SHA256": null,
+          "MANIFEST_ROWS": null,
+          "ROWS_BRONZE": 0,
+          "ROWS_SILVER": 0,
+          "ROWS_REJECTED": 0,
+          "ROWS_DUPLICATE": 0,
+          "ROWS_GOLD": 0,
+          "LOAD_STATUS": "NOT_LOADED"
+        },
+        {
+          "SOURCE_MONTH": "2025-03",
+          "SHA256": null,
+          "MANIFEST_ROWS": null,
+          "ROWS_BRONZE": 0,
+          "ROWS_SILVER": 0,
+          "ROWS_REJECTED": 0,
+          "ROWS_DUPLICATE": 0,
+          "ROWS_GOLD": 0,
+          "LOAD_STATUS": "NOT_LOADED"
+        },
+        {
+          "SOURCE_MONTH": "2025-04",
+          "SHA256": null,
+          "MANIFEST_ROWS": null,
+          "ROWS_BRONZE": 0,
+          "ROWS_SILVER": 0,
+          "ROWS_REJECTED": 0,
+          "ROWS_DUPLICATE": 0,
+          "ROWS_GOLD": 0,
+          "LOAD_STATUS": "NOT_LOADED"
+        },
+        {
+          "SOURCE_MONTH": "2025-05",
+          "SHA256": null,
+          "MANIFEST_ROWS": null,
+          "ROWS_BRONZE": 0,
+          "ROWS_SILVER": 0,
+          "ROWS_REJECTED": 0,
+          "ROWS_DUPLICATE": 0,
+          "ROWS_GOLD": 0,
+          "LOAD_STATUS": "NOT_LOADED"
+        },
+        {
+          "SOURCE_MONTH": "2025-06",
+          "SHA256": null,
+          "MANIFEST_ROWS": null,
+          "ROWS_BRONZE": 0,
+          "ROWS_SILVER": 0,
+          "ROWS_REJECTED": 0,
+          "ROWS_DUPLICATE": 0,
+          "ROWS_GOLD": 0,
+          "LOAD_STATUS": "NOT_LOADED"
+        },
+        {
+          "SOURCE_MONTH": "2025-07",
+          "SHA256": null,
+          "MANIFEST_ROWS": null,
+          "ROWS_BRONZE": 0,
+          "ROWS_SILVER": 0,
+          "ROWS_REJECTED": 0,
+          "ROWS_DUPLICATE": 0,
+          "ROWS_GOLD": 0,
+          "LOAD_STATUS": "NOT_LOADED"
+        },
+        {
+          "SOURCE_MONTH": "2025-08",
+          "SHA256": null,
+          "MANIFEST_ROWS": null,
+          "ROWS_BRONZE": 0,
+          "ROWS_SILVER": 0,
+          "ROWS_REJECTED": 0,
+          "ROWS_DUPLICATE": 0,
+          "ROWS_GOLD": 0,
+          "LOAD_STATUS": "NOT_LOADED"
+        },
+        {
+          "SOURCE_MONTH": "2025-09",
+          "SHA256": null,
+          "MANIFEST_ROWS": null,
+          "ROWS_BRONZE": 0,
+          "ROWS_SILVER": 0,
+          "ROWS_REJECTED": 0,
+          "ROWS_DUPLICATE": 0,
+          "ROWS_GOLD": 0,
+          "LOAD_STATUS": "NOT_LOADED"
+        },
+        {
+          "SOURCE_MONTH": "2025-10",
+          "SHA256": null,
+          "MANIFEST_ROWS": null,
+          "ROWS_BRONZE": 0,
+          "ROWS_SILVER": 0,
+          "ROWS_REJECTED": 0,
+          "ROWS_DUPLICATE": 0,
+          "ROWS_GOLD": 0,
+          "LOAD_STATUS": "NOT_LOADED"
+        },
+        {
+          "SOURCE_MONTH": "2025-11",
+          "SHA256": null,
+          "MANIFEST_ROWS": null,
+          "ROWS_BRONZE": 0,
+          "ROWS_SILVER": 0,
+          "ROWS_REJECTED": 0,
+          "ROWS_DUPLICATE": 0,
+          "ROWS_GOLD": 0,
+          "LOAD_STATUS": "NOT_LOADED"
+        },
+        {
+          "SOURCE_MONTH": "2025-12",
+          "SHA256": null,
+          "MANIFEST_ROWS": null,
+          "ROWS_BRONZE": 0,
+          "ROWS_SILVER": 0,
+          "ROWS_REJECTED": 0,
+          "ROWS_DUPLICATE": 0,
+          "ROWS_GOLD": 0,
+          "LOAD_STATUS": "NOT_LOADED"
+        },
+        {
+          "SOURCE_MONTH": "2026-01",
+          "SHA256": null,
+          "MANIFEST_ROWS": null,
+          "ROWS_BRONZE": 0,
+          "ROWS_SILVER": 0,
+          "ROWS_REJECTED": 0,
+          "ROWS_DUPLICATE": 0,
+          "ROWS_GOLD": 0,
+          "LOAD_STATUS": "NOT_LOADED"
+        },
+        {
+          "SOURCE_MONTH": "2026-02",
+          "SHA256": null,
+          "MANIFEST_ROWS": null,
+          "ROWS_BRONZE": 0,
+          "ROWS_SILVER": 0,
+          "ROWS_REJECTED": 0,
+          "ROWS_DUPLICATE": 0,
+          "ROWS_GOLD": 0,
+          "LOAD_STATUS": "NOT_LOADED"
+        },
+        {
+          "SOURCE_MONTH": "2026-03",
+          "SHA256": null,
+          "MANIFEST_ROWS": null,
+          "ROWS_BRONZE": 0,
+          "ROWS_SILVER": 0,
+          "ROWS_REJECTED": 0,
+          "ROWS_DUPLICATE": 0,
+          "ROWS_GOLD": 0,
+          "LOAD_STATUS": "NOT_LOADED"
+        },
+        {
+          "SOURCE_MONTH": "2026-04",
+          "SHA256": null,
+          "MANIFEST_ROWS": null,
+          "ROWS_BRONZE": 0,
+          "ROWS_SILVER": 0,
+          "ROWS_REJECTED": 0,
+          "ROWS_DUPLICATE": 0,
+          "ROWS_GOLD": 0,
+          "LOAD_STATUS": "NOT_LOADED"
+        },
+        {
+          "SOURCE_MONTH": "2026-05",
+          "SHA256": null,
+          "MANIFEST_ROWS": null,
+          "ROWS_BRONZE": 0,
+          "ROWS_SILVER": 0,
+          "ROWS_REJECTED": 0,
+          "ROWS_DUPLICATE": 0,
+          "ROWS_GOLD": 0,
+          "LOAD_STATUS": "NOT_LOADED"
+        },
+        {
+          "SOURCE_MONTH": "2026-06",
+          "SHA256": null,
+          "MANIFEST_ROWS": null,
+          "ROWS_BRONZE": 0,
+          "ROWS_SILVER": 0,
+          "ROWS_REJECTED": 0,
+          "ROWS_DUPLICATE": 0,
+          "ROWS_GOLD": 0,
+          "LOAD_STATUS": "NOT_LOADED"
+        },
+        {
+          "SOURCE_MONTH": "2026-07",
+          "SHA256": null,
+          "MANIFEST_ROWS": null,
+          "ROWS_BRONZE": 0,
+          "ROWS_SILVER": 0,
+          "ROWS_REJECTED": 0,
+          "ROWS_DUPLICATE": 0,
+          "ROWS_GOLD": 0,
+          "LOAD_STATUS": "NOT_LOADED"
+        },
+        {
+          "SOURCE_MONTH": "2026-08",
+          "SHA256": null,
+          "MANIFEST_ROWS": null,
+          "ROWS_BRONZE": 0,
+          "ROWS_SILVER": 0,
+          "ROWS_REJECTED": 0,
+          "ROWS_DUPLICATE": 0,
+          "ROWS_GOLD": 0,
+          "LOAD_STATUS": "NOT_LOADED"
+        }
+      ],
+      "layers": {
+        "raw": [
+          {
+            "SOURCE_MONTH": "2025-01",
+            "ROW_COUNT": 3475226,
+            "FINGERPRINT": -7676052814286568911
+          }
+        ],
+        "bronze": [
+          {
+            "SOURCE_MONTH": "2025-01",
+            "ROW_COUNT": 3475226,
+            "FINGERPRINT": -7224868260608832656
+          }
+        ],
+        "silver": [
+          {
+            "SOURCE_MONTH": "2025-01",
+            "ROW_COUNT": 3475102,
+            "FINGERPRINT": -6238875705048711791
+          }
+        ],
+        "rejected": [
+          {
+            "SOURCE_MONTH": "2025-01",
+            "ROW_COUNT": 124,
+            "FINGERPRINT": -2068270048875077697
+          }
+        ],
+        "gold": [
+          {
+            "SOURCE_MONTH": "2025-01",
+            "ROW_COUNT": 3475102,
+            "FINGERPRINT": -6238875705048711791
+          }
+        ]
+      },
+      "dimensions": {
+        "DIM_DATE": [
+          {
+            "ROW_COUNT": 33,
+            "FINGERPRINT": 4523686054028147309
+          }
+        ],
+        "DIM_ZONE": [
+          {
+            "ROW_COUNT": 266,
+            "FINGERPRINT": 2815817473893130780
+          }
+        ],
+        "DIM_VENDOR": [
+          {
+            "ROW_COUNT": 5,
+            "FINGERPRINT": -113471123915430960
+          }
+        ],
+        "DIM_PAYMENT": [
+          {
+            "ROW_COUNT": 8,
+            "FINGERPRINT": -3120105325373709721
+          }
+        ],
+        "DIM_RATE": [
+          {
+            "ROW_COUNT": 8,
+            "FINGERPRINT": 5070050350041414497
+          }
+        ]
+      },
+      "gold_example": [
+        {
+          "YEAR": 2024,
+          "MONTH": 12,
+          "BOROUGH": "Manhattan",
+          "TRIPS": 16,
+          "BILLED_AMOUNT": "398.6200",
+          "AVERAGE_MILES": "2.6637500000"
+        },
+        {
+          "YEAR": 2024,
+          "MONTH": 12,
+          "BOROUGH": "Queens",
+          "TRIPS": 5,
+          "BILLED_AMOUNT": "190.5500",
+          "AVERAGE_MILES": "6.8380000000"
+        },
+        {
+          "YEAR": 2025,
+          "MONTH": 1,
+          "BOROUGH": "Bronx",
+          "TRIPS": 14724,
+          "BILLED_AMOUNT": "461604.0700",
+          "AVERAGE_MILES": "65.9824096713"
+        },
+        {
+          "YEAR": 2025,
+          "MONTH": 1,
+          "BOROUGH": "Brooklyn",
+          "TRIPS": 66046,
+          "BILLED_AMOUNT": "1791131.2500",
+          "AVERAGE_MILES": "24.8141174333"
+        },
+        {
+          "YEAR": 2025,
+          "MONTH": 1,
+          "BOROUGH": "EWR",
+          "TRIPS": 377,
+          "BILLED_AMOUNT": "35565.3800",
+          "AVERAGE_MILES": "0.8962864721"
+        },
+        {
+          "YEAR": 2025,
+          "MONTH": 1,
+          "BOROUGH": "Manhattan",
+          "TRIPS": 3089206,
+          "BILLED_AMOUNT": "67088478.0700",
+          "AVERAGE_MILES": "4.4438991411"
+        },
+        {
+          "YEAR": 2025,
+          "MONTH": 1,
+          "BOROUGH": "N/A",
+          "TRIPS": 1380,
+          "BILLED_AMOUNT": "123597.0600",
+          "AVERAGE_MILES": "28.2358333333"
+        },
+        {
+          "YEAR": 2025,
+          "MONTH": 1,
+          "BOROUGH": "Queens",
+          "TRIPS": 294952,
+          "BILLED_AMOUNT": "19266428.9500",
+          "AVERAGE_MILES": "13.3615759513"
+        },
+        {
+          "YEAR": 2025,
+          "MONTH": 1,
+          "BOROUGH": "Staten Island",
+          "TRIPS": 254,
+          "BILLED_AMOUNT": "9227.0300",
+          "AVERAGE_MILES": "8.3104330709"
+        },
+        {
+          "YEAR": 2025,
+          "MONTH": 1,
+          "BOROUGH": "Unknown",
+          "TRIPS": 8141,
+          "BILLED_AMOUNT": "225274.0600",
+          "AVERAGE_MILES": "3.2020562584"
+        },
+        {
+          "YEAR": 2025,
+          "MONTH": 2,
+          "BOROUGH": "Manhattan",
+          "TRIPS": 1,
+          "BILLED_AMOUNT": "22.1300",
+          "AVERAGE_MILES": "1.0400000000"
+        }
+      ]
+    }
+  },
+  "available_runs": [
+    {
+      "run_id": "snowflake-available-03",
+      "started_at": "2026-09-28T17:48:00.750460+00:00",
+      "finished_at": "2026-09-29T05:45:59.867378+00:00",
+      "status": "INCOMPLETE",
+      "completed_phases": [
+        "inventory",
+        "download",
+        "load",
+        "dbt-run",
+        "dbt-test",
+        "report"
+      ],
+      "dbt_seed": {
+        "command": "seed",
+        "returncode": 0,
+        "nodes": [
+          {
+            "unique_id": "seed.nyc_taxi.expected_months",
+            "status": "success"
+          }
+        ]
+      },
+      "dbt_run": {
+        "command": "run",
+        "returncode": 0,
+        "nodes": [
+          {
+            "unique_id": "model.nyc_taxi.bronze_zones",
+            "status": "success"
+          },
+          {
+            "unique_id": "model.nyc_taxi.bronze_trips",
+            "status": "success"
+          },
+          {
+            "unique_id": "model.nyc_taxi.dim_rate",
+            "status": "success"
+          },
+          {
+            "unique_id": "model.nyc_taxi.dim_payment",
+            "status": "success"
+          },
+          {
+            "unique_id": "model.nyc_taxi.dim_vendor",
+            "status": "success"
+          },
+          {
+            "unique_id": "model.nyc_taxi.silver_typed",
+            "status": "success"
+          },
+          {
+            "unique_id": "model.nyc_taxi.dim_zone",
+            "status": "success"
+          },
+          {
+            "unique_id": "model.nyc_taxi.silver_quality",
+            "status": "success"
+          },
+          {
+            "unique_id": "model.nyc_taxi.silver_duplicate_rows",
+            "status": "success"
+          },
+          {
+            "unique_id": "model.nyc_taxi.silver_rejected",
+            "status": "success"
+          },
+          {
+            "unique_id": "model.nyc_taxi.silver_trips",
+            "status": "success"
+          },
+          {
+            "unique_id": "model.nyc_taxi.dim_date",
+            "status": "success"
+          },
+          {
+            "unique_id": "model.nyc_taxi.fact_trips",
+            "status": "success"
+          },
+          {
+            "unique_id": "model.nyc_taxi.data_coverage",
+            "status": "success"
+          }
+        ]
+      },
+      "dbt_test": {
+        "command": "test",
+        "returncode": 0,
+        "nodes": [
+          {
+            "unique_id": "test.nyc_taxi.expected_month_count",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.not_null_bronze_zones_location_id.c92c0eab6a",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.not_null_data_coverage_source_month.17de3640d1",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.not_null_dim_date_date_key.881d0a31b6",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.no_unexpected_month",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.not_null_dim_payment_payment_key.b49bda51a0",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.not_null_dim_rate_rate_key.e58f7aa2bd",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.not_null_dim_vendor_vendor_key.385212c4ba",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.not_null_dim_zone_zone_key.5c509768f0",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.not_null_expected_months_source_month.44152cd286",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.not_null_fact_trips_dropoff_date_key.8449f8c8a1",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.not_null_fact_trips_dropoff_zone_key.6bf6e5cd07",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.not_null_fact_trips_payment_key.b154ba4122",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.not_null_fact_trips_pickup_date_key.d663f93fd8",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.not_null_fact_trips_rate_key.ca6908d778",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.not_null_fact_trips_source_record_key.f0840a6017",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.not_null_fact_trips_pickup_zone_key.368ff10914",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.not_null_fact_trips_trip_key.aecef47635",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.not_null_fact_trips_vendor_key.154e023150",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.not_null_silver_rejected_source_record_key.9a74bbb968",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.not_null_silver_trips_source_record_key.19f225ba5b",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.physical_duplicates_are_error",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.reconcile_layers",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.rejection_has_reason",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.relationships_fact_trips_dropoff_date_key__date_key__ref_dim_date_.909aada83c",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.relationships_fact_trips_dropoff_zone_key__zone_key__ref_dim_zone_.9d517b2bac",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.relationships_fact_trips_payment_key__payment_key__ref_dim_payment_.01385d5b1a",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.relationships_fact_trips_pickup_date_key__date_key__ref_dim_date_.497ae32f88",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.relationships_fact_trips_pickup_zone_key__zone_key__ref_dim_zone_.6a8c7958d2",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.relationships_fact_trips_rate_key__rate_key__ref_dim_rate_.f20e154afd",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.manifest_matches_raw",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.not_null_bronze_trips_source_record_key.50c65f78d5",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.relationships_fact_trips_vendor_key__vendor_key__ref_dim_vendor_.046725581d",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.source_not_null_raw_load_manifest_row_count.f0e8a693cb",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.source_not_null_raw_load_manifest_sha256.4eb24623ed",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.source_not_null_raw_load_manifest_source_month.ac8f76de86",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.source_not_null_raw_taxi_zones_loaded_at.a83158882d",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.source_not_null_raw_taxi_zones_location_id.47a72511cc",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.source_not_null_raw_taxi_zones_source_sha256.e9edb2a6a0",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.source_not_null_raw_yellow_trips_loaded_at.1efc5cc0f1",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.source_not_null_raw_yellow_trips_payload.e4968625a3",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.source_not_null_raw_yellow_trips_source_file.362fbba806",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.source_not_null_raw_yellow_trips_source_month.adff453d58",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.source_not_null_raw_yellow_trips_source_row.83e1e84850",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.source_not_null_raw_yellow_trips_source_sha256.f7a7ba2cf0",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.source_unique_raw_load_manifest_source_month.9edc7a5fd2",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.source_unique_raw_taxi_zones_location_id.65c9464786",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.unique_bronze_trips_source_record_key.0e8a7ac2dc",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.unique_bronze_zones_location_id.51259650d4",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.unique_data_coverage_source_month.26eb9dd16d",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.unique_dim_date_date_key.0869fd48f9",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.unique_dim_payment_payment_key.48e220981f",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.unique_dim_rate_rate_key.a91fcf73de",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.unique_dim_vendor_vendor_key.3de6f52c68",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.unique_dim_zone_zone_key.9eff645dea",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.unique_expected_months_source_month.d25ab3467b",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.relationships_silver_rejected_source_record_key__source_record_key__ref_bronze_trips_.1f735db014",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.unique_fact_trips_trip_key.15131ff52c",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.unique_silver_rejected_source_record_key.55a43e55da",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.valid_trip_rules",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.unique_silver_trips_source_record_key.139c2a8903",
+            "status": "pass"
+          },
+          {
+            "unique_id": "unit_test.nyc_taxi.silver_quality.refunds_and_null_passengers_are_retained_but_invalid_trips_are_rejected",
+            "status": "pass"
+          },
+          {
+            "unique_id": "unit_test.nyc_taxi.silver_rejected.preserve_original_row_in_rejections",
+            "status": "pass"
+          },
+          {
+            "unique_id": "unit_test.nyc_taxi.silver_trips.preserve_distinct_physical_trips_with_identical_business_values",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.relationships_fact_trips_source_record_key__source_record_key__ref_silver_trips_.0aae28da82",
+            "status": "pass"
+          },
+          {
+            "unique_id": "test.nyc_taxi.relationships_silver_trips_source_record_key__source_record_key__ref_bronze_trips_.2ce9a2bdfd",
+            "status": "pass"
+          }
+        ]
+      },
+      "evidence": {
+        "coverage": [
+          {
+            "SOURCE_MONTH": "2025-01",
+            "SHA256": "9af277e4c0d3f9deb30644da822981e1e7df6af58313170fd3aa8a474485488a",
+            "MANIFEST_ROWS": 3475226,
+            "ROWS_BRONZE": 3475226,
+            "ROWS_SILVER": 3475102,
+            "ROWS_REJECTED": 124,
+            "ROWS_DUPLICATE": 0,
+            "ROWS_GOLD": 3475102,
+            "LOAD_STATUS": "LOADED"
+          },
+          {
+            "SOURCE_MONTH": "2025-02",
+            "SHA256": "037cba555a73663f3a51a2c27816e40e3feb364769942bdf122b9da31e377bd3",
+            "MANIFEST_ROWS": 3577543,
+            "ROWS_BRONZE": 3577543,
+            "ROWS_SILVER": 3577450,
+            "ROWS_REJECTED": 93,
+            "ROWS_DUPLICATE": 0,
+            "ROWS_GOLD": 3577450,
+            "LOAD_STATUS": "LOADED"
+          },
+          {
+            "SOURCE_MONTH": "2025-03",
+            "SHA256": "20c4b77cce457b7cfdae77c5069ca7dc91c167f876a41467f4502ab69487a186",
+            "MANIFEST_ROWS": 4145257,
+            "ROWS_BRONZE": 4145257,
+            "ROWS_SILVER": 4145176,
+            "ROWS_REJECTED": 81,
+            "ROWS_DUPLICATE": 0,
+            "ROWS_GOLD": 4145176,
+            "LOAD_STATUS": "LOADED"
+          },
+          {
+            "SOURCE_MONTH": "2025-04",
+            "SHA256": "6f98938de9380a3f85600533816f0dc0e6d9b5b210e485d623952bac599bbe28",
+            "MANIFEST_ROWS": 3970553,
+            "ROWS_BRONZE": 3970553,
+            "ROWS_SILVER": 3970390,
+            "ROWS_REJECTED": 163,
+            "ROWS_DUPLICATE": 0,
+            "ROWS_GOLD": 3970390,
+            "LOAD_STATUS": "LOADED"
+          },
+          {
+            "SOURCE_MONTH": "2025-05",
+            "SHA256": "7ef46bcd0fceee7f8c0bb38a532be05bceefabb512d4bb0b32a7727dd862b15c",
+            "MANIFEST_ROWS": 4591845,
+            "ROWS_BRONZE": 4591845,
+            "ROWS_SILVER": 4591744,
+            "ROWS_REJECTED": 101,
+            "ROWS_DUPLICATE": 0,
+            "ROWS_GOLD": 4591744,
+            "LOAD_STATUS": "LOADED"
+          },
+          {
+            "SOURCE_MONTH": "2025-06",
+            "SHA256": "1bea7f5b09c744414451fa7fef09fbc5a393ffb1621c859be6ba0df23a14e1b6",
+            "MANIFEST_ROWS": 4322960,
+            "ROWS_BRONZE": 4322960,
+            "ROWS_SILVER": 4322729,
+            "ROWS_REJECTED": 231,
+            "ROWS_DUPLICATE": 0,
+            "ROWS_GOLD": 4322729,
+            "LOAD_STATUS": "LOADED"
+          },
+          {
+            "SOURCE_MONTH": "2025-07",
+            "SHA256": "1efa6a0458dc60341f7f81dcbb5015af731f42d1a109f4e0d594dd46970fd4ef",
+            "MANIFEST_ROWS": 3898963,
+            "ROWS_BRONZE": 3898963,
+            "ROWS_SILVER": 3898962,
+            "ROWS_REJECTED": 1,
+            "ROWS_DUPLICATE": 0,
+            "ROWS_GOLD": 3898962,
+            "LOAD_STATUS": "LOADED"
+          },
+          {
+            "SOURCE_MONTH": "2025-08",
+            "SHA256": "b982ace703e3564d92e94edae5ec93515f4f1fb07a5b95e7404c32464c1a6a89",
+            "MANIFEST_ROWS": 3574091,
+            "ROWS_BRONZE": 3574091,
+            "ROWS_SILVER": 3574089,
+            "ROWS_REJECTED": 2,
+            "ROWS_DUPLICATE": 0,
+            "ROWS_GOLD": 3574089,
+            "LOAD_STATUS": "LOADED"
+          },
+          {
+            "SOURCE_MONTH": "2025-09",
+            "SHA256": "cd39b9901f01d1fd752d45cbaec91ee5f68c4dddf9e261e938c1dbab404644c7",
+            "MANIFEST_ROWS": 4251015,
+            "ROWS_BRONZE": 4251015,
+            "ROWS_SILVER": 4251015,
+            "ROWS_REJECTED": 0,
+            "ROWS_DUPLICATE": 0,
+            "ROWS_GOLD": 4251015,
+            "LOAD_STATUS": "LOADED"
+          },
+          {
+            "SOURCE_MONTH": "2025-10",
+            "SHA256": "e1f63caf331bc6230d9c6f757cb88e55fdc2bddde185fb414d2c947abdc773c3",
+            "MANIFEST_ROWS": 4428699,
+            "ROWS_BRONZE": 4428699,
+            "ROWS_SILVER": 4428697,
+            "ROWS_REJECTED": 2,
+            "ROWS_DUPLICATE": 0,
+            "ROWS_GOLD": 4428697,
+            "LOAD_STATUS": "LOADED"
+          },
+          {
+            "SOURCE_MONTH": "2025-11",
+            "SHA256": "2cf2f3127f96d4d5dea30f8afe05119cf8e4ba57bd9e60b789d3f296fc8459ab",
+            "MANIFEST_ROWS": 4181444,
+            "ROWS_BRONZE": 4181444,
+            "ROWS_SILVER": 4180009,
+            "ROWS_REJECTED": 1435,
+            "ROWS_DUPLICATE": 0,
+            "ROWS_GOLD": 4180009,
+            "LOAD_STATUS": "LOADED"
+          },
+          {
+            "SOURCE_MONTH": "2025-12",
+            "SHA256": "eaba7ff61ebb6453fc6f673fda43d621380307f869b768b124992e8486c785e1",
+            "MANIFEST_ROWS": 4305006,
+            "ROWS_BRONZE": 4305006,
+            "ROWS_SILVER": 4305004,
+            "ROWS_REJECTED": 2,
+            "ROWS_DUPLICATE": 0,
+            "ROWS_GOLD": 4305004,
+            "LOAD_STATUS": "LOADED"
+          },
+          {
+            "SOURCE_MONTH": "2026-01",
+            "SHA256": "8b3933fe6f0d7b6d8826613c0dd724edc680ff7c49e2bd4c7635c05102728637",
+            "MANIFEST_ROWS": 3724889,
+            "ROWS_BRONZE": 3724889,
+            "ROWS_SILVER": 3724888,
+            "ROWS_REJECTED": 1,
+            "ROWS_DUPLICATE": 0,
+            "ROWS_GOLD": 3724888,
+            "LOAD_STATUS": "LOADED"
+          },
+          {
+            "SOURCE_MONTH": "2026-02",
+            "SHA256": "5352ca800f29c40a221ed5b0c6392c451fde7fcd236a73651bd5aea74713a26c",
+            "MANIFEST_ROWS": 3399866,
+            "ROWS_BRONZE": 3399866,
+            "ROWS_SILVER": 3399864,
+            "ROWS_REJECTED": 2,
+            "ROWS_DUPLICATE": 0,
+            "ROWS_GOLD": 3399864,
+            "LOAD_STATUS": "LOADED"
+          },
+          {
+            "SOURCE_MONTH": "2026-03",
+            "SHA256": "d7af794a7ac06cbbb5afb4d1df9e86d84f2e878584de708ff2ffca4bd7d234d9",
+            "MANIFEST_ROWS": 3952451,
+            "ROWS_BRONZE": 3952451,
+            "ROWS_SILVER": 3952449,
+            "ROWS_REJECTED": 2,
+            "ROWS_DUPLICATE": 0,
+            "ROWS_GOLD": 3952449,
+            "LOAD_STATUS": "LOADED"
+          },
+          {
+            "SOURCE_MONTH": "2026-04",
+            "SHA256": "e03b82d5722a6b21d4fbce011afd8837495202c0b5db77ff0d8d15dd80834ba8",
+            "MANIFEST_ROWS": 3831240,
+            "ROWS_BRONZE": 3831240,
+            "ROWS_SILVER": 3831240,
+            "ROWS_REJECTED": 0,
+            "ROWS_DUPLICATE": 0,
+            "ROWS_GOLD": 3831240,
+            "LOAD_STATUS": "LOADED"
+          },
+          {
+            "SOURCE_MONTH": "2026-05",
+            "SHA256": "9aa5a1609e2bf07d9051b7d530de05b1019e12a560ecb2c59c137c8b3a8b6750",
+            "MANIFEST_ROWS": 4090836,
+            "ROWS_BRONZE": 4090836,
+            "ROWS_SILVER": 4090836,
+            "ROWS_REJECTED": 0,
+            "ROWS_DUPLICATE": 0,
+            "ROWS_GOLD": 4090836,
+            "LOAD_STATUS": "LOADED"
+          },
+          {
+            "SOURCE_MONTH": "2026-06",
+            "SHA256": "f340c62a18885c56176433c9db28e97d0a8a14e6e49869276ad8afb20ebf088b",
+            "MANIFEST_ROWS": 3837248,
+            "ROWS_BRONZE": 3837248,
+            "ROWS_SILVER": 3837247,
+            "ROWS_REJECTED": 1,
+            "ROWS_DUPLICATE": 0,
+            "ROWS_GOLD": 3837247,
+            "LOAD_STATUS": "LOADED"
+          },
+          {
+            "SOURCE_MONTH": "2026-07",
+            "SHA256": "3260bb629c2f334055f8a566cbb02c15476b15120c45d7ad0aae46fc4bb06612",
+            "MANIFEST_ROWS": 3530109,
+            "ROWS_BRONZE": 3530109,
+            "ROWS_SILVER": 3530108,
+            "ROWS_REJECTED": 1,
+            "ROWS_DUPLICATE": 0,
+            "ROWS_GOLD": 3530108,
+            "LOAD_STATUS": "LOADED"
+          },
+          {
+            "SOURCE_MONTH": "2026-08",
+            "SHA256": null,
+            "MANIFEST_ROWS": null,
+            "ROWS_BRONZE": 0,
+            "ROWS_SILVER": 0,
+            "ROWS_REJECTED": 0,
+            "ROWS_DUPLICATE": 0,
+            "ROWS_GOLD": 0,
+            "LOAD_STATUS": "NOT_LOADED"
+          }
+        ],
+        "layers": {
+          "raw": [
+            {
+              "SOURCE_MONTH": "2025-01",
+              "ROW_COUNT": 3475226,
+              "FINGERPRINT": -7676052814286568911
+            },
+            {
+              "SOURCE_MONTH": "2025-02",
+              "ROW_COUNT": 3577543,
+              "FINGERPRINT": 3778520832727540940
+            },
+            {
+              "SOURCE_MONTH": "2025-03",
+              "ROW_COUNT": 4145257,
+              "FINGERPRINT": 5429168335096691052
+            },
+            {
+              "SOURCE_MONTH": "2025-04",
+              "ROW_COUNT": 3970553,
+              "FINGERPRINT": -4751438921674311992
+            },
+            {
+              "SOURCE_MONTH": "2025-05",
+              "ROW_COUNT": 4591845,
+              "FINGERPRINT": 629100541642798789
+            },
+            {
+              "SOURCE_MONTH": "2025-06",
+              "ROW_COUNT": 4322960,
+              "FINGERPRINT": -1099148152035891249
+            },
+            {
+              "SOURCE_MONTH": "2025-07",
+              "ROW_COUNT": 3898963,
+              "FINGERPRINT": 5941614962469905015
+            },
+            {
+              "SOURCE_MONTH": "2025-08",
+              "ROW_COUNT": 3574091,
+              "FINGERPRINT": -5327357508704190141
+            },
+            {
+              "SOURCE_MONTH": "2025-09",
+              "ROW_COUNT": 4251015,
+              "FINGERPRINT": 7743498757419962891
+            },
+            {
+              "SOURCE_MONTH": "2025-10",
+              "ROW_COUNT": 4428699,
+              "FINGERPRINT": -5089268686047150368
+            },
+            {
+              "SOURCE_MONTH": "2025-11",
+              "ROW_COUNT": 4181444,
+              "FINGERPRINT": -3771295329041511498
+            },
+            {
+              "SOURCE_MONTH": "2025-12",
+              "ROW_COUNT": 4305006,
+              "FINGERPRINT": 1273250928291956805
+            },
+            {
+              "SOURCE_MONTH": "2026-01",
+              "ROW_COUNT": 3724889,
+              "FINGERPRINT": -2886940593386461550
+            },
+            {
+              "SOURCE_MONTH": "2026-02",
+              "ROW_COUNT": 3399866,
+              "FINGERPRINT": -5640190874008078852
+            },
+            {
+              "SOURCE_MONTH": "2026-03",
+              "ROW_COUNT": 3952451,
+              "FINGERPRINT": 2472979307877599503
+            },
+            {
+              "SOURCE_MONTH": "2026-04",
+              "ROW_COUNT": 3831240,
+              "FINGERPRINT": 1574781498433367288
+            },
+            {
+              "SOURCE_MONTH": "2026-05",
+              "ROW_COUNT": 4090836,
+              "FINGERPRINT": 923706452591061842
+            },
+            {
+              "SOURCE_MONTH": "2026-06",
+              "ROW_COUNT": 3837248,
+              "FINGERPRINT": -4604545208594971800
+            },
+            {
+              "SOURCE_MONTH": "2026-07",
+              "ROW_COUNT": 3530109,
+              "FINGERPRINT": 5829523449480514396
+            }
+          ],
+          "bronze": [
+            {
+              "SOURCE_MONTH": "2025-01",
+              "ROW_COUNT": 3475226,
+              "FINGERPRINT": -7224868260608832656
+            },
+            {
+              "SOURCE_MONTH": "2025-02",
+              "ROW_COUNT": 3577543,
+              "FINGERPRINT": 6303616828189794423
+            },
+            {
+              "SOURCE_MONTH": "2025-03",
+              "ROW_COUNT": 4145257,
+              "FINGERPRINT": -4927019864826706365
+            },
+            {
+              "SOURCE_MONTH": "2025-04",
+              "ROW_COUNT": 3970553,
+              "FINGERPRINT": -6151737495177554971
+            },
+            {
+              "SOURCE_MONTH": "2025-05",
+              "ROW_COUNT": 4591845,
+              "FINGERPRINT": 9184703032642179669
+            },
+            {
+              "SOURCE_MONTH": "2025-06",
+              "ROW_COUNT": 4322960,
+              "FINGERPRINT": -1772313325798842682
+            },
+            {
+              "SOURCE_MONTH": "2025-07",
+              "ROW_COUNT": 3898963,
+              "FINGERPRINT": -3239388851488050859
+            },
+            {
+              "SOURCE_MONTH": "2025-08",
+              "ROW_COUNT": 3574091,
+              "FINGERPRINT": 8700198385489718538
+            },
+            {
+              "SOURCE_MONTH": "2025-09",
+              "ROW_COUNT": 4251015,
+              "FINGERPRINT": -5132654581666823576
+            },
+            {
+              "SOURCE_MONTH": "2025-10",
+              "ROW_COUNT": 4428699,
+              "FINGERPRINT": 3826073991712462390
+            },
+            {
+              "SOURCE_MONTH": "2025-11",
+              "ROW_COUNT": 4181444,
+              "FINGERPRINT": -5587459372281793099
+            },
+            {
+              "SOURCE_MONTH": "2025-12",
+              "ROW_COUNT": 4305006,
+              "FINGERPRINT": 4637254036339945416
+            },
+            {
+              "SOURCE_MONTH": "2026-01",
+              "ROW_COUNT": 3724889,
+              "FINGERPRINT": -1322453556525945761
+            },
+            {
+              "SOURCE_MONTH": "2026-02",
+              "ROW_COUNT": 3399866,
+              "FINGERPRINT": 4946388662381140932
+            },
+            {
+              "SOURCE_MONTH": "2026-03",
+              "ROW_COUNT": 3952451,
+              "FINGERPRINT": 7010043900500914358
+            },
+            {
+              "SOURCE_MONTH": "2026-04",
+              "ROW_COUNT": 3831240,
+              "FINGERPRINT": -6908930120286512008
+            },
+            {
+              "SOURCE_MONTH": "2026-05",
+              "ROW_COUNT": 4090836,
+              "FINGERPRINT": 8758883392067433391
+            },
+            {
+              "SOURCE_MONTH": "2026-06",
+              "ROW_COUNT": 3837248,
+              "FINGERPRINT": -8831188932636155040
+            },
+            {
+              "SOURCE_MONTH": "2026-07",
+              "ROW_COUNT": 3530109,
+              "FINGERPRINT": 1995695795394699051
+            }
+          ],
+          "silver": [
+            {
+              "SOURCE_MONTH": "2025-01",
+              "ROW_COUNT": 3475102,
+              "FINGERPRINT": -6238875705048711791
+            },
+            {
+              "SOURCE_MONTH": "2025-02",
+              "ROW_COUNT": 3577450,
+              "FINGERPRINT": 7196621812262491974
+            },
+            {
+              "SOURCE_MONTH": "2025-03",
+              "ROW_COUNT": 4145176,
+              "FINGERPRINT": -3795385930563132748
+            },
+            {
+              "SOURCE_MONTH": "2025-04",
+              "ROW_COUNT": 3970390,
+              "FINGERPRINT": 6470032987983015031
+            },
+            {
+              "SOURCE_MONTH": "2025-05",
+              "ROW_COUNT": 4591744,
+              "FINGERPRINT": -5769776081401850570
+            },
+            {
+              "SOURCE_MONTH": "2025-06",
+              "ROW_COUNT": 4322729,
+              "FINGERPRINT": 723638472778880793
+            },
+            {
+              "SOURCE_MONTH": "2025-07",
+              "ROW_COUNT": 3898962,
+              "FINGERPRINT": 8999160843629854851
+            },
+            {
+              "SOURCE_MONTH": "2025-08",
+              "ROW_COUNT": 3574089,
+              "FINGERPRINT": 3136401651920504697
+            },
+            {
+              "SOURCE_MONTH": "2025-09",
+              "ROW_COUNT": 4251015,
+              "FINGERPRINT": -7722745579946951353
+            },
+            {
+              "SOURCE_MONTH": "2025-10",
+              "ROW_COUNT": 4428697,
+              "FINGERPRINT": -3166416164616044894
+            },
+            {
+              "SOURCE_MONTH": "2025-11",
+              "ROW_COUNT": 4180009,
+              "FINGERPRINT": -9063502761505252582
+            },
+            {
+              "SOURCE_MONTH": "2025-12",
+              "ROW_COUNT": 4305004,
+              "FINGERPRINT": -1774588675532565041
+            },
+            {
+              "SOURCE_MONTH": "2026-01",
+              "ROW_COUNT": 3724888,
+              "FINGERPRINT": -8141594227160648830
+            },
+            {
+              "SOURCE_MONTH": "2026-02",
+              "ROW_COUNT": 3399864,
+              "FINGERPRINT": -8967704904708985622
+            },
+            {
+              "SOURCE_MONTH": "2026-03",
+              "ROW_COUNT": 3952449,
+              "FINGERPRINT": -4885504665064690916
+            },
+            {
+              "SOURCE_MONTH": "2026-04",
+              "ROW_COUNT": 3831240,
+              "FINGERPRINT": 1677823785907296975
+            },
+            {
+              "SOURCE_MONTH": "2026-05",
+              "ROW_COUNT": 4090836,
+              "FINGERPRINT": 928986274964120382
+            },
+            {
+              "SOURCE_MONTH": "2026-06",
+              "ROW_COUNT": 3837247,
+              "FINGERPRINT": -3252188496784968209
+            },
+            {
+              "SOURCE_MONTH": "2026-07",
+              "ROW_COUNT": 3530108,
+              "FINGERPRINT": 6698155624653975563
+            }
+          ],
+          "rejected": [
+            {
+              "SOURCE_MONTH": "2025-01",
+              "ROW_COUNT": 124,
+              "FINGERPRINT": -2068270048875077697
+            },
+            {
+              "SOURCE_MONTH": "2025-02",
+              "ROW_COUNT": 93,
+              "FINGERPRINT": -5075334249372923532
+            },
+            {
+              "SOURCE_MONTH": "2025-03",
+              "ROW_COUNT": 81,
+              "FINGERPRINT": 4352348999716174451
+            },
+            {
+              "SOURCE_MONTH": "2025-04",
+              "ROW_COUNT": 163,
+              "FINGERPRINT": -4738110641528223582
+            },
+            {
+              "SOURCE_MONTH": "2025-05",
+              "ROW_COUNT": 101,
+              "FINGERPRINT": 5331249304500388181
+            },
+            {
+              "SOURCE_MONTH": "2025-06",
+              "ROW_COUNT": 231,
+              "FINGERPRINT": -6854148629582332646
+            },
+            {
+              "SOURCE_MONTH": "2025-07",
+              "ROW_COUNT": 1,
+              "FINGERPRINT": 1511300605547690611
+            },
+            {
+              "SOURCE_MONTH": "2025-08",
+              "ROW_COUNT": 2,
+              "FINGERPRINT": 4162750774185107572
+            },
+            {
+              "SOURCE_MONTH": "2025-10",
+              "ROW_COUNT": 2,
+              "FINGERPRINT": -820220072489421952
+            },
+            {
+              "SOURCE_MONTH": "2025-11",
+              "ROW_COUNT": 1435,
+              "FINGERPRINT": 5302397976211215032
+            },
+            {
+              "SOURCE_MONTH": "2025-12",
+              "ROW_COUNT": 2,
+              "FINGERPRINT": -8998018203025643059
+            },
+            {
+              "SOURCE_MONTH": "2026-01",
+              "ROW_COUNT": 1,
+              "FINGERPRINT": 5652627398779825418
+            },
+            {
+              "SOURCE_MONTH": "2026-02",
+              "ROW_COUNT": 2,
+              "FINGERPRINT": 3099917880304269833
+            },
+            {
+              "SOURCE_MONTH": "2026-03",
+              "ROW_COUNT": 2,
+              "FINGERPRINT": 167837684071883155
+            },
+            {
+              "SOURCE_MONTH": "2026-06",
+              "ROW_COUNT": 1,
+              "FINGERPRINT": -6279030871755844313
+            },
+            {
+              "SOURCE_MONTH": "2026-07",
+              "ROW_COUNT": 1,
+              "FINGERPRINT": -3917239569045317498
+            }
+          ],
+          "gold": [
+            {
+              "SOURCE_MONTH": "2025-01",
+              "ROW_COUNT": 3475102,
+              "FINGERPRINT": -6238875705048711791
+            },
+            {
+              "SOURCE_MONTH": "2025-02",
+              "ROW_COUNT": 3577450,
+              "FINGERPRINT": 7196621812262491974
+            },
+            {
+              "SOURCE_MONTH": "2025-03",
+              "ROW_COUNT": 4145176,
+              "FINGERPRINT": -3795385930563132748
+            },
+            {
+              "SOURCE_MONTH": "2025-04",
+              "ROW_COUNT": 3970390,
+              "FINGERPRINT": 6470032987983015031
+            },
+            {
+              "SOURCE_MONTH": "2025-05",
+              "ROW_COUNT": 4591744,
+              "FINGERPRINT": -5769776081401850570
+            },
+            {
+              "SOURCE_MONTH": "2025-06",
+              "ROW_COUNT": 4322729,
+              "FINGERPRINT": 723638472778880793
+            },
+            {
+              "SOURCE_MONTH": "2025-07",
+              "ROW_COUNT": 3898962,
+              "FINGERPRINT": 8999160843629854851
+            },
+            {
+              "SOURCE_MONTH": "2025-08",
+              "ROW_COUNT": 3574089,
+              "FINGERPRINT": 3136401651920504697
+            },
+            {
+              "SOURCE_MONTH": "2025-09",
+              "ROW_COUNT": 4251015,
+              "FINGERPRINT": -7722745579946951353
+            },
+            {
+              "SOURCE_MONTH": "2025-10",
+              "ROW_COUNT": 4428697,
+              "FINGERPRINT": -3166416164616044894
+            },
+            {
+              "SOURCE_MONTH": "2025-11",
+              "ROW_COUNT": 4180009,
+              "FINGERPRINT": -9063502761505252582
+            },
+            {
+              "SOURCE_MONTH": "2025-12",
+              "ROW_COUNT": 4305004,
+              "FINGERPRINT": -1774588675532565041
+            },
+            {
+              "SOURCE_MONTH": "2026-01",
+              "ROW_COUNT": 3724888,
+              "FINGERPRINT": -8141594227160648830
+            },
+            {
+              "SOURCE_MONTH": "2026-02",
+              "ROW_COUNT": 3399864,
+              "FINGERPRINT": -8967704904708985622
+            },
+            {
+              "SOURCE_MONTH": "2026-03",
+              "ROW_COUNT": 3952449,
+              "FINGERPRINT": -4885504665064690916
+            },
+            {
+              "SOURCE_MONTH": "2026-04",
+              "ROW_COUNT": 3831240,
+              "FINGERPRINT": 1677823785907296975
+            },
+            {
+              "SOURCE_MONTH": "2026-05",
+              "ROW_COUNT": 4090836,
+              "FINGERPRINT": 928986274964120382
+            },
+            {
+              "SOURCE_MONTH": "2026-06",
+              "ROW_COUNT": 3837247,
+              "FINGERPRINT": -3252188496784968209
+            },
+            {
+              "SOURCE_MONTH": "2026-07",
+              "ROW_COUNT": 3530108,
+              "FINGERPRINT": 6698155624653975563
+            }
+          ]
+        },
+        "dimensions": {
+          "DIM_DATE": [
+            {
+              "ROW_COUNT": 587,
+              "FINGERPRINT": 4678545552595551655
+            }
+          ],
+          "DIM_ZONE": [
+            {
+              "ROW_COUNT": 266,
+              "FINGERPRINT": 2815817473893130780
+            }
+          ],
+          "DIM_VENDOR": [
+            {
+              "ROW_COUNT": 5,
+              "FINGERPRINT": -113471123915430960
+            }
+          ],
+          "DIM_PAYMENT": [
+            {
+              "ROW_COUNT": 8,
+              "FINGERPRINT": -3120105325373709721
+            }
+          ],
+          "DIM_RATE": [
+            {
+              "ROW_COUNT": 8,
+              "FINGERPRINT": 5070050350041414497
+            }
+          ]
+        },
+        "gold_example": [
+          {
+            "YEAR": 2001,
+            "MONTH": 1,
+            "BOROUGH": "Queens",
+            "TRIPS": 1,
+            "BILLED_AMOUNT": "68.4600",
+            "AVERAGE_MILES": "8.0600000000"
+          },
+          {
+            "YEAR": 2007,
+            "MONTH": 12,
+            "BOROUGH": "Manhattan",
+            "TRIPS": 1,
+            "BILLED_AMOUNT": "22.7500",
+            "AVERAGE_MILES": "3.0000000000"
+          },
+          {
+            "YEAR": 2008,
+            "MONTH": 12,
+            "BOROUGH": "Manhattan",
+            "TRIPS": 3,
+            "BILLED_AMOUNT": "171.9900",
+            "AVERAGE_MILES": "6.7000000000"
+          },
+          {
+            "YEAR": 2008,
+            "MONTH": 12,
+            "BOROUGH": "Queens",
+            "TRIPS": 1,
+            "BILLED_AMOUNT": "80.9400",
+            "AVERAGE_MILES": "18.1200000000"
+          },
+          {
+            "YEAR": 2008,
+            "MONTH": 12,
+            "BOROUGH": "Unknown",
+            "TRIPS": 1,
+            "BILLED_AMOUNT": "26.9400",
+            "AVERAGE_MILES": "2.2800000000"
+          },
+          {
+            "YEAR": 2009,
+            "MONTH": 1,
+            "BOROUGH": "Manhattan",
+            "TRIPS": 7,
+            "BILLED_AMOUNT": "139.2100",
+            "AVERAGE_MILES": "1.8542857143"
+          },
+          {
+            "YEAR": 2009,
+            "MONTH": 1,
+            "BOROUGH": "Queens",
+            "TRIPS": 4,
+            "BILLED_AMOUNT": "349.7200",
+            "AVERAGE_MILES": "11.8225000000"
+          },
+          {
+            "YEAR": 2024,
+            "MONTH": 12,
+            "BOROUGH": "Manhattan",
+            "TRIPS": 16,
+            "BILLED_AMOUNT": "398.6200",
+            "AVERAGE_MILES": "2.6637500000"
+          },
+          {
+            "YEAR": 2024,
+            "MONTH": 12,
+            "BOROUGH": "Queens",
+            "TRIPS": 5,
+            "BILLED_AMOUNT": "190.5500",
+            "AVERAGE_MILES": "6.8380000000"
+          },
+          {
+            "YEAR": 2025,
+            "MONTH": 1,
+            "BOROUGH": "Bronx",
+            "TRIPS": 14724,
+            "BILLED_AMOUNT": "461604.0700",
+            "AVERAGE_MILES": "65.9824096713"
+          },
+          {
+            "YEAR": 2025,
+            "MONTH": 1,
+            "BOROUGH": "Brooklyn",
+            "TRIPS": 66046,
+            "BILLED_AMOUNT": "1791131.2500",
+            "AVERAGE_MILES": "24.8141174333"
+          },
+          {
+            "YEAR": 2025,
+            "MONTH": 1,
+            "BOROUGH": "EWR",
+            "TRIPS": 377,
+            "BILLED_AMOUNT": "35565.3800",
+            "AVERAGE_MILES": "0.8962864721"
+          },
+          {
+            "YEAR": 2025,
+            "MONTH": 1,
+            "BOROUGH": "Manhattan",
+            "TRIPS": 3089233,
+            "BILLED_AMOUNT": "67089101.4300",
+            "AVERAGE_MILES": "4.4438805360"
+          },
+          {
+            "YEAR": 2025,
+            "MONTH": 1,
+            "BOROUGH": "N/A",
+            "TRIPS": 1380,
+            "BILLED_AMOUNT": "123597.0600",
+            "AVERAGE_MILES": "28.2358333333"
+          },
+          {
+            "YEAR": 2025,
+            "MONTH": 1,
+            "BOROUGH": "Queens",
+            "TRIPS": 294955,
+            "BILLED_AMOUNT": "19266672.3400",
+            "AVERAGE_MILES": "13.3616143480"
+          },
+          {
+            "YEAR": 2025,
+            "MONTH": 1,
+            "BOROUGH": "Staten Island",
+            "TRIPS": 254,
+            "BILLED_AMOUNT": "9227.0300",
+            "AVERAGE_MILES": "8.3104330709"
+          },
+          {
+            "YEAR": 2025,
+            "MONTH": 1,
+            "BOROUGH": "Unknown",
+            "TRIPS": 8141,
+            "BILLED_AMOUNT": "225274.0600",
+            "AVERAGE_MILES": "3.2020562584"
+          },
+          {
+            "YEAR": 2025,
+            "MONTH": 2,
+            "BOROUGH": "Bronx",
+            "TRIPS": 21458,
+            "BILLED_AMOUNT": "640778.1900",
+            "AVERAGE_MILES": "54.6017792898"
+          },
+          {
+            "YEAR": 2025,
+            "MONTH": 2,
+            "BOROUGH": "Brooklyn",
+            "TRIPS": 96790,
+            "BILLED_AMOUNT": "2556765.0700",
+            "AVERAGE_MILES": "34.6508033888"
+          },
+          {
+            "YEAR": 2025,
+            "MONTH": 2,
+            "BOROUGH": "EWR",
+            "TRIPS": 314,
+            "BILLED_AMOUNT": "30798.0200",
+            "AVERAGE_MILES": "0.9889490446"
+          }
+        ]
+      }
+    }
+  ],
+  "idempotency": {
+    "snowflake-pilot-03": {
+      "status": "PASS",
+      "baseline": "snowflake-pilot-02",
+      "repeat": "snowflake-pilot-03",
+      "checked_at": "2026-09-28T17:29:32.764952+00:00",
+      "selected_months": [
+        "2025-01"
+      ]
+    }
+  },
+  "fixes": [
+    "Reserved SQL report alias ROWS replaced by ROW_COUNT",
+    "Private values removed from uncommitted .env.example",
+    "Local lowercase connection aliases normalized without modifying .env",
+    "Validated unchanged months skip PUT",
+    "Up to four independent validated downloads; PUT/COPY use independent connections, committed replacements remain mutex-serialized"
+  ]
+}

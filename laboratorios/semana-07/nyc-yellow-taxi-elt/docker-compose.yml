@@ -1,0 +1,59 @@
+name: nyc-yellow-taxi-lab
+services:
+  postgres:
+    image: postgres:16.10-bookworm
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: kestra
+      POSTGRES_USER: kestra
+      POSTGRES_PASSWORD: ${KESTRA_POSTGRES_PASSWORD:?Set KESTRA_POSTGRES_PASSWORD in .env}
+    volumes:
+      - ./.runtime/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kestra -d kestra"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+  kestra:
+    build:
+      context: .
+      dockerfile: infrastructure/Dockerfile
+    image: nyc-taxi-kestra:lab
+    restart: unless-stopped
+    command: server standalone
+    ports:
+      - "127.0.0.1:8080:8080"
+      - "127.0.0.1:8081:8081"
+    env_file:
+      - .env
+    environment:
+      SNOWFLAKE_PRIVATE_KEY_FILE: /opt/nyc-taxi/secrets/snowflake.p8
+      KESTRA_CONFIGURATION: |
+        datasources:
+          postgres:
+            url: jdbc:postgresql://postgres:5432/kestra
+            driverClassName: org.postgresql.Driver
+            username: kestra
+            password: ${KESTRA_POSTGRES_PASSWORD:?Set KESTRA_POSTGRES_PASSWORD}
+        kestra:
+          repository:
+            type: postgres
+          queue:
+            type: postgres
+          storage:
+            type: local
+            local:
+              basePath: /app/storage
+          tasks:
+            tmpDir:
+              path: /tmp/kestra-wd/tmp
+          url: http://localhost:8080/
+    volumes:
+      - ./.runtime/kestra:/app/storage
+      - ./.runtime/work:/tmp/kestra-wd
+      - ./data:/opt/nyc-taxi/data
+      - ./reports:/opt/nyc-taxi/reports
+      - ./secrets:/opt/nyc-taxi/secrets:ro
+    depends_on:
+      postgres:
+        condition: service_healthy

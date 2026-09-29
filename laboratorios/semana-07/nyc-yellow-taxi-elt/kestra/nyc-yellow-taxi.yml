@@ -1,0 +1,99 @@
+id: nyc-yellow-taxi-elt
+namespace: lab.semana07
+description: "20-month ELT. A successful task is not a complete dataset; report is the strict gate."
+concurrency:
+  limit: 1
+  behavior: QUEUE
+inputs:
+  - id: month
+    type: SELECT
+    defaults: "2025-01"
+    values:
+      - "all"
+      - "2025-01"
+      - "2025-02"
+      - "2025-03"
+      - "2025-04"
+      - "2025-05"
+      - "2025-06"
+      - "2025-07"
+      - "2025-08"
+      - "2025-09"
+      - "2025-10"
+      - "2025-11"
+      - "2025-12"
+      - "2026-01"
+      - "2026-02"
+      - "2026-03"
+      - "2026-04"
+      - "2026-05"
+      - "2026-06"
+      - "2026-07"
+      - "2026-08"
+tasks:
+  - id: inventory
+    type: io.kestra.plugin.scripts.shell.Commands
+    taskRunner:
+      type: io.kestra.plugin.core.runner.Process
+    env:
+      LAB_RUN_ID: "{{ execution.id }}"
+      LAB_MONTH: "{{ inputs.month }}"
+    commands:
+      - python -m ingestion.workflow inventory --run-id "$LAB_RUN_ID" --month "$LAB_MONTH"
+  - id: download
+    type: io.kestra.plugin.scripts.shell.Commands
+    taskRunner:
+      type: io.kestra.plugin.core.runner.Process
+    env:
+      LAB_RUN_ID: "{{ execution.id }}"
+      LAB_MONTH: "{{ inputs.month }}"
+    commands:
+      - python -m ingestion.workflow download --run-id "$LAB_RUN_ID" --month "$LAB_MONTH"
+  - id: load
+    type: io.kestra.plugin.scripts.shell.Commands
+    taskRunner:
+      type: io.kestra.plugin.core.runner.Process
+    env:
+      LAB_RUN_ID: "{{ execution.id }}"
+      LAB_MONTH: "{{ inputs.month }}"
+    commands:
+      - python -m ingestion.workflow load --run-id "$LAB_RUN_ID" --month "$LAB_MONTH"
+  - id: dbt_run
+    type: io.kestra.plugin.scripts.shell.Commands
+    taskRunner:
+      type: io.kestra.plugin.core.runner.Process
+    env:
+      LAB_RUN_ID: "{{ execution.id }}"
+      LAB_MONTH: "{{ inputs.month }}"
+    commands:
+      - python -m ingestion.workflow dbt-run --run-id "$LAB_RUN_ID" --month "$LAB_MONTH"
+  - id: dbt_test
+    type: io.kestra.plugin.scripts.shell.Commands
+    taskRunner:
+      type: io.kestra.plugin.core.runner.Process
+    env:
+      LAB_RUN_ID: "{{ execution.id }}"
+      LAB_MONTH: "{{ inputs.month }}"
+    commands:
+      - python -m ingestion.workflow dbt-test --run-id "$LAB_RUN_ID" --month "$LAB_MONTH"
+  - id: report
+    type: io.kestra.plugin.scripts.shell.Commands
+    taskRunner:
+      type: io.kestra.plugin.core.runner.Process
+    env:
+      LAB_RUN_ID: "{{ execution.id }}"
+      LAB_MONTH: "{{ inputs.month }}"
+    commands:
+      # The CLI uses exit 2 for a valid but incomplete 20-month business result.
+      # Preserve that explicit output while allowing Kestra to record the technical run.
+      - set +e; python -m ingestion.workflow report --run-id "$LAB_RUN_ID" --month "$LAB_MONTH"; status=$?; if [ "$status" -eq 2 ]; then exit 0; fi; exit "$status"
+
+errors:
+  - id: record_failure
+    type: io.kestra.plugin.scripts.shell.Commands
+    taskRunner:
+      type: io.kestra.plugin.core.runner.Process
+    env:
+      LAB_RUN_ID: "{{ execution.id }}"
+    commands:
+      - python -m ingestion.workflow failure --run-id "$LAB_RUN_ID"

@@ -1,0 +1,27 @@
+name: nyc_taxi
+version: '1.0.0'
+config-version: 2
+profile: nyc_taxi
+model-paths: [models]
+test-paths: [tests]
+macro-paths: [macros]
+seed-paths: [seeds]
+clean-targets: [target, dbt_packages]
+models:
+  nyc_taxi:
+    bronze:
+      +schema: BRONZE
+      +materialized: view
+    silver:
+      +schema: SILVER
+      +materialized: view
+    gold:
+      +schema: GOLD
+      +materialized: table
+seeds:
+  nyc_taxi:
+    +schema: RAW
+    +quote_columns: false
+    expected_months:
+      +column_types:
+        source_month: varchar(7)

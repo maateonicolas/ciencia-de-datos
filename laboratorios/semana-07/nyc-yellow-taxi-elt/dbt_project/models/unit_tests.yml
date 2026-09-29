@@ -1,0 +1,51 @@
+version: 2
+unit_tests:
+  - name: preserve_distinct_physical_trips_with_identical_business_values
+    model: silver_trips
+    given:
+      - input: ref('silver_quality')
+        rows:
+          - {source_record_key: row_a, source_occurrence: 1, is_valid: true, total_amount: 20}
+          - {source_record_key: row_b, source_occurrence: 1, is_valid: true, total_amount: 20}
+          - {source_record_key: row_a, source_occurrence: 2, is_valid: true, total_amount: 20}
+          - {source_record_key: row_c, source_occurrence: 1, is_valid: false, total_amount: 20}
+    expect:
+      rows:
+        - {source_record_key: row_a, total_amount: 20}
+        - {source_record_key: row_b, total_amount: 20}
+  - name: preserve_original_row_in_rejections
+    model: silver_rejected
+    given:
+      - input: ref('silver_quality')
+        rows:
+          - {source_record_key: invalid_row, source_occurrence: 1, is_valid: false}
+          - {source_record_key: valid_row, source_occurrence: 1, is_valid: true}
+          - {source_record_key: invalid_row, source_occurrence: 2, is_valid: false}
+    expect:
+      rows:
+        - {source_record_key: invalid_row}
+  - name: refunds_and_null_passengers_are_retained_but_invalid_trips_are_rejected
+    model: silver_quality
+    given:
+      - input: ref('silver_typed')
+        format: sql
+        rows: |
+          select column1::varchar as source_record_key, 'file.parquet' as source_file,
+            '2025-01' as source_month, '2025-01-01'::timestamp_ntz as loaded_at,
+            parse_json('{}') as payload, null::number as passenger_count,
+            '2025-01-01 10:00:00'::timestamp_ntz as pickup_at,
+            column2::timestamp_ntz as dropoff_at, column3::number as trip_distance_miles,
+            column4::number as total_amount, column4::number as fare_amount,
+            'N' as store_and_forward_flag, 1 as vendor_id, 1 as payment_type,
+            1 as rate_code_id, 1 as pickup_location_id, 2 as dropoff_location_id
+          from values
+            ('refund', '2025-01-01 10:10:00', 2, -10),
+            ('negative_distance', '2025-01-01 10:10:00', -2, 10),
+            ('negative_duration', '2025-01-01 09:00:00', 2, 10),
+            ('normal', '2025-01-01 10:10:00', 2, 10)
+    expect:
+      rows:
+        - {source_record_key: refund, is_valid: true}
+        - {source_record_key: negative_distance, is_valid: false}
+        - {source_record_key: negative_duration, is_valid: false}
+        - {source_record_key: normal, is_valid: true}
