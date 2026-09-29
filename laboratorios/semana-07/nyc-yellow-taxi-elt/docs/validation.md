@@ -18,6 +18,7 @@ Los reportes completos, perfiles, logs y Parquet permanecen localmente fuera de 
 - .env.example fue saneado antes del commit; auditoría del commit inicial sin coincidencias de la contraseña local.
 - Kestra ejecutó el flujo registrado `lab.semana07.nyc-yellow-taxi-elt` con `2025-01` (ejecución `1l89w7BQgKIZOnlz6ZRASm`). Inventario, descarga, carga `unchanged`, 14 modelos y 66 pruebas terminaron correctamente. El reporte confirmó 19/20 y `INCOMPLETE`.
 - El YAML ajustado conserva ese estado de negocio como salida y convierte solamente el código 2 esperado de cobertura incompleta en éxito técnico de la tarea. Los errores técnicos siguen devolviendo código 1.
+- El piloto posterior al ajuste, `7T7XNevYMSBDae9bOaofhn` (2025-01), terminó técnicamente en **SUCCESS** en Kestra. Sus seis fases quedaron completadas: inventario, descarga, carga, dbt run, dbt test y reporte. La carga registró `load_action=unchanged`: Bronze permaneció en 3,475,226 filas; Silver y Gold en 3,475,102, y la verificación de duplicados físicos se mantuvo en 0. dbt ejecutó 14 modelos y aprobó 66 pruebas. El reporte conservó el estado de negocio `INCOMPLETE`, con 19/20 meses cargados y `2026-08` pendiente de publicación.
 
 ## Recuentos remotos por mes de archivo
 
@@ -83,6 +84,6 @@ Las ejecuciones con cobertura parcial terminan con código 2, no 0. Fallos técn
 
 ## Pendiente
 
-- El YAML ajustado quedó sincronizado como revisión 2 y Kestra fue reiniciado sin ejecuciones activas; su representación ejecutable coincide con el archivo versionado. Falta iniciar el nuevo piloto desde una sesión autenticada de Kestra para confirmar que la ejecución técnica queda en SUCCESS mientras conserva `business_status=INCOMPLETE`.
+- El YAML ajustado quedó sincronizado como revisión 2. El piloto `7T7XNevYMSBDae9bOaofhn` confirmó que Kestra termina técnicamente en SUCCESS mientras `business_status=INCOMPLETE`.
 - Esperar la publicación verificable de agosto de 2026; ejecutar de nuevo los 20 meses y sus pruebas.
 - No se declara el laboratorio completo ni se inventan datos del mes pendiente.
