@@ -83,6 +83,6 @@ Las ejecuciones con cobertura parcial terminan con código 2, no 0. Fallos técn
 
 ## Pendiente
 
-- Sincronizar el YAML ajustado con la instancia autenticada de Kestra y repetir el piloto para confirmar que la ejecución técnica queda en SUCCESS mientras conserva `business_status=INCOMPLETE`.
+- El YAML ajustado quedó sincronizado como revisión 2 y Kestra fue reiniciado sin ejecuciones activas; su representación ejecutable coincide con el archivo versionado. Falta iniciar el nuevo piloto desde una sesión autenticada de Kestra para confirmar que la ejecución técnica queda en SUCCESS mientras conserva `business_status=INCOMPLETE`.
 - Esperar la publicación verificable de agosto de 2026; ejecutar de nuevo los 20 meses y sus pruebas.
 - No se declara el laboratorio completo ni se inventan datos del mes pendiente.

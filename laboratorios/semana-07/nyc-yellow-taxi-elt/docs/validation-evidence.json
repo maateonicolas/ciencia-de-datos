@@ -29,6 +29,8 @@
   "compose_json_schema": "PASS",
   "docker_engine": "AVAILABLE",
   "kestra_execution": "TECHNICAL_TASKS_PASS_BUSINESS_INCOMPLETE",
+  "kestra_flow_revision": 2,
+  "kestra_flow_runtime_synced": true,
   "kestra_run": {
     "execution_id": "1l89w7BQgKIZOnlz6ZRASm",
     "month": "2025-01",
